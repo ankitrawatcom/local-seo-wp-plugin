@@ -1,25 +1,22 @@
-jQuery(document).ready(function($) {
-    console.log('Local SEO Admin Script Loaded'); // Debugging
+(function ($) {
+	'use strict';
 
-    function localSeoToggleBusinessFields() {
-        var businessType = $('#business_type').val();
-        console.log('Selected Business Type:', businessType); // Debugging
+	$(function () {
+		var $type = $('#lsar-business-type');
+		var wcActive = !!(window.lsarAdmin && window.lsarAdmin.woocommerceActive);
 
-        // Hide all business-specific fields
-        $('.business-specific-field').hide();
+		function toggleWooCommerceFields() {
+			var isStore = $type.val() === 'Store';
+			var $rows = $('.lsar-woocommerce-field').closest('tr');
 
-        // Show fields for the selected business type
-        $('.' + businessType + '-field').show();
+			if (isStore && wcActive) {
+				$rows.show();
+			} else {
+				$rows.hide();
+			}
+		}
 
-        // Show WooCommerce fields only if WooCommerce is active
-        if (businessType === 'Store' && typeof woocommerce_params !== 'undefined') {
-            $('.Store-field').show();
-        }
-    }
-
-    // Initial toggle on page load
-    localSeoToggleBusinessFields();
-
-    // Toggle fields when business type changes
-    $('#business_type').change(localSeoToggleBusinessFields);
-});
+		$type.on('change', toggleWooCommerceFields);
+		toggleWooCommerceFields();
+	});
+})(jQuery);

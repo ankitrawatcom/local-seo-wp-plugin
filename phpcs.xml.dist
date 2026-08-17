@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ruleset name="Local SEO By Ankit Rawat">
+	<description>WordPress Coding Standards for Local SEO By Ankit Rawat.</description>
+
+	<file>.</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg value="s"/>
+
+	<config name="minimum_supported_wp_version" value="6.0"/>
+
+	<rule ref="WordPress">
+		<!-- PSR-4 class filenames (Plugin.php) instead of class-plugin.php. -->
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="local-seo-by-ankit-rawat"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="local_seo_by_ankit_rawat"/>
+				<element value="LOCAL_SEO_BY_ANKIT_RAWAT"/>
+				<element value="AnkitRawat"/>
+				<element value="lsar"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

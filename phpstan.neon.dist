@@ -1,0 +1,11 @@
+parameters:
+    level: 5
+    paths:
+        - src
+        - local-seo-by-ankit-rawat.php
+        - uninstall.php
+    bootstrapFiles:
+        - tests/phpstan-bootstrap.php
+    scanFiles:
+        - tests/wordpress-stubs.php
+    treatPhpDocTypesAsCertain: false
