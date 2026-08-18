@@ -135,14 +135,11 @@ final class LocalBusiness {
 			$schema['sameAs'] = $same_as;
 		}
 
-		if ( 'Store' === $type && ! empty( $settings['woocommerce_product_schema'] ) && WooCommerce::is_active() ) {
+		if ( 'Store' === $type && ! empty( $settings['woocommerce_product_schema'] ) && WooCommerce::is_active() && WooCommerce::should_embed_store_catalog() ) {
 			$products = ( new WooCommerce() )->store_products( $settings );
-			if ( array() !== $products ) {
-				$schema['hasOfferCatalog'] = array(
-					'@type'           => 'OfferCatalog',
-					'name'            => __( 'Products', 'local-seo-by-ankit-rawat' ),
-					'itemListElement' => $products,
-				);
+			$catalog  = WooCommerce::offer_catalog( $products );
+			if ( array() !== $catalog ) {
+				$schema['hasOfferCatalog'] = $catalog;
 			}
 		}
 

@@ -120,7 +120,7 @@ final class Sanitize {
 	 */
 	public static function phone( $value ) {
 		$phone = self::text( $value );
-		$phone = preg_replace( '/[^0-9+\-\s().extEXT]/', '', $phone );
+		$phone = preg_replace( '/[^0-9+\-\s().#extEXT]/', '', $phone );
 		if ( ! is_string( $phone ) ) {
 			return '';
 		}

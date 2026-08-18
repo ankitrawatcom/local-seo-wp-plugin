@@ -13,7 +13,7 @@
 | Price range | **Preserved** (improved) | Output as `priceRange` when set. 3.3 stored it but did not output it. |
 | Sitewide JSON-LD in `wp_head` | **Preserved** (changed) | No placeholders; empty nodes omitted; safer encoding. |
 | WooCommerce product JSON-LD on product pages | **Preserved** (improved) | Text-stripped descriptions; `wc_get_product` fallback; currency from WC if override empty. |
-| Up to five products on Store schema | **Preserved** (changed) | Still max 5 published products. Property is `hasOfferCatalog` instead of invalid `product`. |
+| Up to five products on Store schema | **Preserved** (changed) | Still max 5 published products. Property is `hasOfferCatalog` (`OfferCatalog` / `ListItem`) instead of invalid `product`. Default URLs: front page, home, shop — not every page. Filter: `local_seo_by_ankit_rawat_embed_store_catalog`. |
 | 1-hour schema transient | **Removed** | Cache ignored most setting changes and served stale product prices. Rebuild cost is one option read (+ up to 5 products for Store). |
 | Google My Business API key field | **Removed** from UI | Never used. Not migrated into the new option. Old DB row kept. |
 | Google Place ID field | **Preserved** as optional notes field | Not output in JSON-LD; no API calls. |
@@ -33,7 +33,7 @@
 ## Frontend output differences operators should expect
 
 * Sites that enabled schema with **empty** NAP will **stop** publishing fake “123 Main St / Anytown” data.
-* Store JSON-LD shape changes from `product` to `hasOfferCatalog`. Rich Results may take time to recrawl.
+* Store JSON-LD shape changes from `product` to `hasOfferCatalog`. The catalog is no longer printed on every URL (front page, home, and shop only). Rich Results may take time to recrawl.
 * `sameAs`, extra `image`, and `priceRange` may **appear** for the first time if those 3.3 fields were filled.
 * JSON is compact (no pretty-print) and uses Unicode escapes for `<` `>`.
 

@@ -41,6 +41,7 @@ final class Plugin {
 	public function register() {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'admin_init', array( Migrator::class, 'maybe_run' ), 1 );
+		add_action( 'admin_init', array( $this, 'privacy_policy' ) );
 
 		$settings = new Settings();
 		$settings->register();
@@ -69,6 +70,24 @@ final class Plugin {
 	}
 
 	/**
+	 * Privacy policy suggested text (business NAP stored locally, no remote send).
+	 *
+	 * @return void
+	 */
+	public function privacy_policy() {
+		if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+			return;
+		}
+
+		$content = '<p>' . esc_html__( 'Local SEO By Ankit Rawat stores business contact details that you enter in plugin settings (name, address, telephone, geographic coordinates, logo/image URLs, and optional social profile URLs) in the WordPress database. When schema output is enabled, those details may be printed in public JSON-LD on the site. The plugin does not send this information to Google or other remote services.', 'local-seo-by-ankit-rawat' ) . '</p>';
+
+		wp_add_privacy_policy_content(
+			__( 'Local SEO By Ankit Rawat', 'local-seo-by-ankit-rawat' ),
+			wp_kses_post( $content )
+		);
+	}
+
+	/**
 	 * Activation: migrate 3.3 options if present, then record version.
 	 *
 	 * @return void
@@ -81,7 +100,7 @@ final class Plugin {
 		}
 
 		if ( false === get_option( self::OPTION, false ) ) {
-			add_option( self::OPTION, Settings::defaults(), '', 'yes' );
+			add_option( self::OPTION, Settings::defaults(), '', true );
 		}
 	}
 

@@ -55,4 +55,16 @@ final class PluginBootstrapTest extends TestCase {
 		$this->assertStringNotContainsString( "delete_option( 'business_name' )", $uninstall );
 		$this->assertStringNotContainsString( 'google_my_business_api_key', $uninstall );
 	}
+
+	public function test_privacy_policy_content_is_registered() {
+		$plugin = new Plugin();
+		$plugin->privacy_policy();
+		$this->assertNotSame( '', $GLOBALS['lsar_privacy'] );
+		$this->assertStringContainsString( 'does not send', wp_strip_all_tags( $GLOBALS['lsar_privacy'] ) );
+	}
+
+	public function test_uninstall_removes_legacy_marker() {
+		$uninstall = file_get_contents( dirname( LOCAL_SEO_BY_ANKIT_RAWAT_FILE ) . '/uninstall.php' );
+		$this->assertStringContainsString( "delete_option( 'local_seo_enable_schema' )", $uninstall );
+	}
 }

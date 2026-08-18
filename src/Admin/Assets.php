@@ -31,6 +31,19 @@ final class Assets {
 	}
 
 	/**
+	 * Whether WooCommerce product-schema fields should be shown.
+	 *
+	 * Independent of business type: product JSON-LD can run on product pages
+	 * for any LocalBusiness-family type. Detection is PHP-side (WooCommerce
+	 * class + wc_get_products), never woocommerce_params.
+	 *
+	 * @return bool
+	 */
+	public static function should_show_woocommerce_fields() {
+		return WooCommerce::is_active();
+	}
+
+	/**
 	 * Enqueue CSS and JS on the settings screen.
 	 *
 	 * @param string $hook Current admin page hook.
@@ -66,7 +79,7 @@ final class Assets {
 			$handle,
 			'lsarAdmin',
 			array(
-				'woocommerceActive' => WooCommerce::is_active(),
+				'woocommerceActive' => self::should_show_woocommerce_fields(),
 			)
 		);
 	}

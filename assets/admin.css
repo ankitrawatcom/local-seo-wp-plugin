@@ -12,6 +12,11 @@
 	max-width: 32rem;
 }
 
-.lsar-woocommerce-field {
-	/* Visibility is controlled by admin.js using PHP-provided WooCommerce state. */
+/*
+ * Hide WooCommerce fields when PHP reports WooCommerce is not active.
+ * Rows use Settings API class `lsar-woocommerce-field` on the <tr>.
+ * Product-schema fields stay visible for every business type when WC is active.
+ */
+.lsar-settings.lsar-woocommerce-unavailable .lsar-woocommerce-field {
+	display: none;
 }

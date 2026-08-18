@@ -79,9 +79,45 @@ final class SettingsSanitizerTest extends TestCase {
 		$this->assertSame( '', $clean['longitude'] );
 	}
 
-	public function test_sanitize_unchecked_checkboxes_are_false() {
+	public function test_sanitize_unchecked_schema_checkbox_is_false() {
 		$clean = Settings::sanitize( array() );
 		$this->assertFalse( $clean['schema_enabled'] );
+	}
+
+	public function test_woocommerce_checkbox_absent_preserves_true() {
+		update_option(
+			\AnkitRawat\LocalSEO\Plugin::OPTION,
+			array_merge( Settings::defaults(), array( 'woocommerce_product_schema' => true ) )
+		);
+		$clean = Settings::sanitize( array( 'business_name' => 'NAP only' ) );
+		$this->assertTrue( $clean['woocommerce_product_schema'] );
+		$this->assertSame( 'NAP only', $clean['business_name'] );
+	}
+
+	public function test_woocommerce_checkbox_absent_preserves_false() {
+		update_option(
+			\AnkitRawat\LocalSEO\Plugin::OPTION,
+			array_merge( Settings::defaults(), array( 'woocommerce_product_schema' => false ) )
+		);
+		$clean = Settings::sanitize( array( 'business_name' => 'NAP only' ) );
+		$this->assertFalse( $clean['woocommerce_product_schema'] );
+	}
+
+	public function test_woocommerce_checkbox_submitted_checked_becomes_true() {
+		update_option(
+			\AnkitRawat\LocalSEO\Plugin::OPTION,
+			array_merge( Settings::defaults(), array( 'woocommerce_product_schema' => false ) )
+		);
+		$clean = Settings::sanitize( array( 'woocommerce_product_schema' => '1' ) );
+		$this->assertTrue( $clean['woocommerce_product_schema'] );
+	}
+
+	public function test_woocommerce_checkbox_submitted_unchecked_becomes_false() {
+		update_option(
+			\AnkitRawat\LocalSEO\Plugin::OPTION,
+			array_merge( Settings::defaults(), array( 'woocommerce_product_schema' => true ) )
+		);
+		$clean = Settings::sanitize( array( 'woocommerce_product_schema' => '0' ) );
 		$this->assertFalse( $clean['woocommerce_product_schema'] );
 	}
 
@@ -98,5 +134,10 @@ final class SettingsSanitizerTest extends TestCase {
 			array( 'LocalBusiness', 'Restaurant', 'Hotel', 'ProfessionalService', 'Store' ),
 			Sanitize::business_types()
 		);
+	}
+
+	public function test_phone_allows_extension_hash() {
+		$clean = Settings::sanitize( array( 'phone' => '+1 415 555 0100 #12' ) );
+		$this->assertStringContainsString( '#12', $clean['phone'] );
 	}
 }

@@ -26,14 +26,14 @@ Major release. Existing 3.3 configuration is migrated into a namespaced option. 
 * Placeholder NAP values (`123 Main St`, `My Business`, …) are no longer emitted.
 * Empty properties and invalid geo are omitted.
 * Logo, extra images, social URLs (`sameAs`), and price range are output when valid.
-* Store nested products use `hasOfferCatalog` / `OfferCatalog` instead of the invalid `product` property. Limit remains 5 published products.
+* Store nested products use `hasOfferCatalog` / `OfferCatalog` / `ListItem` instead of the invalid `product` property. Limit remains 5 published products. Default placement is the front page, home (posts index), and WooCommerce shop. Customize with `local_seo_by_ankit_rawat_embed_store_catalog`.
 
 ### WooCommerce
 
 * Availability is detected with `class_exists( 'WooCommerce' )` and `wc_get_products()`, not `woocommerce_params`.
 * Product descriptions are stripped to text before JSON encoding.
 * Currency override is optional; otherwise WooCommerce store currency is used.
-* Product object resolved via `global $product` or `wc_get_product()`.
+* Product JSON-LD setting is shown whenever WooCommerce is active, for any business type (not only Store). Detection uses the WooCommerce class, not `woocommerce_params`.
 
 ### Compatibility
 
@@ -45,6 +45,7 @@ Major release. Existing 3.3 configuration is migrated into a namespaced option. 
 ### Documentation and tooling
 
 * Honest `readme.txt`, `LICENSE`, `uninstall.php`, `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/REGRESSION-AUDIT.md`.
+* Store catalog placement documented as front page, home, and shop; `local_seo_by_ankit_rawat_embed_store_catalog` is the supported filter.
 * PHPUnit tests (stubs; no full WordPress/WooCommerce runtime in CI by default).
 * PHPCS (WordPress) and PHPStan configs.
 

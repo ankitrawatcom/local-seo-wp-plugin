@@ -139,6 +139,71 @@ final class WooCommerce {
 	}
 
 	/**
+	 * Whether to attach the Store product catalog on this request.
+	 *
+	 * Default: front page, posts index, or WooCommerce shop — not product pages
+	 * (those already have product JSON-LD). Placement can be customized with
+	 * `local_seo_by_ankit_rawat_embed_store_catalog`.
+	 *
+	 * @return bool
+	 */
+	public static function should_embed_store_catalog() {
+		$embed = false;
+		if ( function_exists( 'is_front_page' ) && is_front_page() ) {
+			$embed = true;
+		} elseif ( function_exists( 'is_home' ) && is_home() ) {
+			$embed = true;
+		} elseif ( function_exists( 'is_shop' ) && is_shop() ) {
+			$embed = true;
+		}
+
+		if ( function_exists( 'is_product' ) && is_product() ) {
+			$embed = false;
+		}
+
+		/**
+		 * Whether to include hasOfferCatalog on the Store JSON-LD for this request.
+		 *
+		 * Default is true on the front page, home (posts index), and shop.
+		 *
+		 * @param bool $embed Whether to embed.
+		 */
+		return (bool) apply_filters( 'local_seo_by_ankit_rawat_embed_store_catalog', $embed );
+	}
+
+	/**
+	 * Build a Schema.org OfferCatalog of ListItem-wrapped products.
+	 *
+	 * @param array<int, array<string, mixed>> $products Product nodes.
+	 * @return array<string, mixed>
+	 */
+	public static function offer_catalog( array $products ) {
+		$elements = array();
+		$position = 1;
+		foreach ( $products as $product ) {
+			if ( ! is_array( $product ) || array() === $product ) {
+				continue;
+			}
+			$elements[] = array(
+				'@type'    => 'ListItem',
+				'position' => $position,
+				'item'     => $product,
+			);
+			++$position;
+		}
+
+		if ( array() === $elements ) {
+			return array();
+		}
+
+		return array(
+			'@type'           => 'OfferCatalog',
+			'name'            => __( 'Products', 'local-seo-by-ankit-rawat' ),
+			'itemListElement' => $elements,
+		);
+	}
+
+	/**
 	 * Resolve the current product object.
 	 *
 	 * @return object|null
@@ -182,8 +247,11 @@ final class WooCommerce {
 
 		$sku   = method_exists( $product, 'get_sku' ) ? $product->get_sku() : '';
 		$price = method_exists( $product, 'get_price' ) ? $product->get_price() : '';
-		$id    = method_exists( $product, 'get_id' ) ? (int) $product->get_id() : 0;
-		$url   = $id > 0 ? get_permalink( $id ) : '';
+		if ( ( '' === $price || null === $price ) && method_exists( $product, 'get_variation_price' ) ) {
+			$price = $product->get_variation_price( 'min', true );
+		}
+		$id  = method_exists( $product, 'get_id' ) ? (int) $product->get_id() : 0;
+		$url = $id > 0 ? get_permalink( $id ) : '';
 
 		$in_stock     = method_exists( $product, 'is_in_stock' ) ? (bool) $product->is_in_stock() : false;
 		$availability = $in_stock ? 'InStock' : 'OutOfStock';
@@ -191,9 +259,6 @@ final class WooCommerce {
 		$currency = Sanitize::currency( isset( $settings['woocommerce_currency'] ) ? $settings['woocommerce_currency'] : '' );
 		if ( '' === $currency && function_exists( 'get_woocommerce_currency' ) ) {
 			$currency = Sanitize::currency( get_woocommerce_currency() );
-		}
-		if ( '' === $currency ) {
-			$currency = 'USD';
 		}
 
 		return array(

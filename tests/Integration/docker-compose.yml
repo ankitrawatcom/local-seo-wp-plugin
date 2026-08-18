@@ -1,0 +1,70 @@
+# Disposable Local SEO integration stack.
+# Development only. Not used at plugin runtime. Not included in the production ZIP.
+#
+# From this directory, once Docker is installed:
+#   docker compose up -d
+# Then see README.md and docs/INTEGRATION-TEST-PLAN.md.
+#
+# Do not treat `docker compose up` as a passed WordPress/WooCommerce test.
+
+name: lsar-integration
+
+services:
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_ROOT_PASSWORD: wordpressroot
+    volumes:
+      - lsar_test_db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  wordpress:
+    # Pin 7.0.4 as requested. If this tag is missing on Docker Hub, use wordpress:7.0-php8.3-apache and record the digest.
+    image: wordpress:7.0.4-php8.3-apache
+    ports:
+      - "8088:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      - lsar_wp_html:/var/www/html
+      - ../..:/var/www/html/wp-content/plugins/local-seo-by-ankit-rawat:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    user: "33:33"
+    volumes:
+      - lsar_wp_html:/var/www/html
+      - ../..:/var/www/html/wp-content/plugins/local-seo-by-ankit-rawat:ro
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      wordpress:
+        condition: service_started
+      db:
+        condition: service_healthy
+    profiles:
+      - tools
+    working_dir: /var/www/html
+
+volumes:
+  lsar_test_db:
+  lsar_wp_html:

@@ -93,6 +93,7 @@ final class Settings {
 				'sanitize_callback' => array( self::class, 'sanitize' ),
 				'default'           => self::defaults(),
 				'show_in_rest'      => false,
+				'capability'        => Plugin::CAPABILITY,
 			)
 		);
 
@@ -104,7 +105,13 @@ final class Settings {
 		);
 
 		$this->add_field( 'schema_enabled', __( 'Enable schema', 'local-seo-by-ankit-rawat' ), 'checkbox' );
-		$this->add_field( 'business_type', __( 'Business type', 'local-seo-by-ankit-rawat' ), 'business_type' );
+		$this->add_field(
+			'business_type',
+			__( 'Business type', 'local-seo-by-ankit-rawat' ),
+			'business_type',
+			'lsar_main',
+			array( 'label_for' => 'lsar-business-type' )
+		);
 		$this->add_field( 'business_name', __( 'Business name', 'local-seo-by-ankit-rawat' ), 'text' );
 		$this->add_field( 'street_address', __( 'Street address', 'local-seo-by-ankit-rawat' ), 'text' );
 		$this->add_field( 'locality', __( 'City', 'local-seo-by-ankit-rawat' ), 'text' );
@@ -156,8 +163,9 @@ final class Settings {
 	private function add_field( $id, $label, $type, $section = 'lsar_main', array $extra = array() ) {
 		$args = array_merge(
 			array(
-				'id'   => $id,
-				'type' => $type,
+				'id'        => $id,
+				'type'      => $type,
+				'label_for' => 'lsar-' . $id,
 			),
 			$extra
 		);
@@ -192,7 +200,8 @@ final class Settings {
 			return;
 		}
 
-		echo '<p>' . esc_html__( 'When enabled, product JSON-LD is added on product pages. If the business type is Store, up to five published products are also listed in an OfferCatalog on the sitewide schema.', 'local-seo-by-ankit-rawat' ) . '</p>';
+		echo '<p>' . esc_html__( 'When enabled, Product JSON-LD is printed on WooCommerce product pages for any business type.', 'local-seo-by-ankit-rawat' ) . '</p>';
+		echo '<p>' . esc_html__( 'If the business type is Store, up to five published products are also listed in a Schema.org OfferCatalog (hasOfferCatalog with ListItem entries) on the front page, the posts index (home), and the WooCommerce shop. The catalog is not added on every URL. Customize placement with the local_seo_by_ankit_rawat_embed_store_catalog filter.', 'local-seo-by-ankit-rawat' ) . '</p>';
 	}
 
 	/**
@@ -204,9 +213,12 @@ final class Settings {
 		if ( ! current_user_can( Plugin::CAPABILITY ) ) {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'local-seo-by-ankit-rawat' ) );
 		}
+
+		$wc_wrap = WooCommerce::is_active() ? 'lsar-woocommerce-available' : 'lsar-woocommerce-unavailable';
 		?>
-		<div class="wrap lsar-settings">
+		<div class="wrap lsar-settings <?php echo esc_attr( $wc_wrap ); ?>">
 			<h1><?php esc_html_e( 'Local SEO Settings', 'local-seo-by-ankit-rawat' ); ?></h1>
+			<?php settings_errors(); ?>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( Plugin::GROUP );
@@ -232,6 +244,12 @@ final class Settings {
 		$value    = isset( $settings[ $id ] ) ? $settings[ $id ] : '';
 
 		if ( 'checkbox' === $type ) {
+			if ( 'woocommerce_product_schema' === $id ) {
+				printf(
+					'<input type="hidden" name="%s" value="0" />',
+					esc_attr( $name )
+				);
+			}
 			printf(
 				'<label for="%1$s"><input type="checkbox" id="%1$s" name="%2$s" value="1" %3$s /> %4$s</label>',
 				esc_attr( 'lsar-' . $id ),
@@ -239,6 +257,9 @@ final class Settings {
 				checked( ! empty( $value ), true, false ),
 				esc_html( $this->checkbox_label( $id ) )
 			);
+			if ( 'woocommerce_product_schema' === $id ) {
+				echo '<p class="description">' . esc_html__( 'This control is independent of business type. Store OfferCatalog output still requires type Store and only appears on the front page, home, and shop by default.', 'local-seo-by-ankit-rawat' ) . '</p>';
+			}
 			return;
 		}
 
@@ -347,33 +368,46 @@ final class Settings {
 		$defaults = self::defaults();
 		$clean    = $defaults;
 
-		$clean['schema_enabled']             = Sanitize::bool( isset( $input['schema_enabled'] ) ? $input['schema_enabled'] : false );
-		$clean['business_type']              = Sanitize::business_type( isset( $input['business_type'] ) ? $input['business_type'] : 'LocalBusiness' );
-		$clean['business_name']              = Sanitize::text( isset( $input['business_name'] ) ? $input['business_name'] : '' );
-		$clean['street_address']             = Sanitize::text( isset( $input['street_address'] ) ? $input['street_address'] : '' );
-		$clean['locality']                   = Sanitize::text( isset( $input['locality'] ) ? $input['locality'] : '' );
-		$clean['region']                     = Sanitize::text( isset( $input['region'] ) ? $input['region'] : '' );
-		$clean['postal_code']                = Sanitize::text( isset( $input['postal_code'] ) ? $input['postal_code'] : '' );
-		$clean['country']                    = Sanitize::text( isset( $input['country'] ) ? $input['country'] : '' );
-		$clean['phone']                      = Sanitize::phone( isset( $input['phone'] ) ? $input['phone'] : '' );
-		$clean['price_range']                = Sanitize::price_range( isset( $input['price_range'] ) ? $input['price_range'] : '' );
-		$clean['logo']                       = Sanitize::http_url( isset( $input['logo'] ) ? $input['logo'] : '' );
-		$clean['images']                     = Sanitize::url_list( isset( $input['images'] ) ? $input['images'] : array() );
-		$clean['social_profiles']            = Sanitize::url_list( isset( $input['social_profiles'] ) ? $input['social_profiles'] : array() );
-		$clean['latitude']                   = Sanitize::latitude( isset( $input['latitude'] ) ? $input['latitude'] : '' );
-		$clean['longitude']                  = Sanitize::longitude( isset( $input['longitude'] ) ? $input['longitude'] : '' );
-		$clean['place_id']                   = Sanitize::text( isset( $input['place_id'] ) ? $input['place_id'] : '' );
-		$clean['woocommerce_product_schema'] = Sanitize::bool( isset( $input['woocommerce_product_schema'] ) ? $input['woocommerce_product_schema'] : false );
-		$clean['woocommerce_currency']       = Sanitize::currency( isset( $input['woocommerce_currency'] ) ? $input['woocommerce_currency'] : '' );
+		$clean['schema_enabled']       = Sanitize::bool( isset( $input['schema_enabled'] ) ? $input['schema_enabled'] : false );
+		$clean['business_type']        = Sanitize::business_type( isset( $input['business_type'] ) ? $input['business_type'] : 'LocalBusiness' );
+		$clean['business_name']        = Sanitize::text( isset( $input['business_name'] ) ? $input['business_name'] : '' );
+		$clean['street_address']       = Sanitize::text( isset( $input['street_address'] ) ? $input['street_address'] : '' );
+		$clean['locality']             = Sanitize::text( isset( $input['locality'] ) ? $input['locality'] : '' );
+		$clean['region']               = Sanitize::text( isset( $input['region'] ) ? $input['region'] : '' );
+		$clean['postal_code']          = Sanitize::text( isset( $input['postal_code'] ) ? $input['postal_code'] : '' );
+		$clean['country']              = Sanitize::text( isset( $input['country'] ) ? $input['country'] : '' );
+		$clean['phone']                = Sanitize::phone( isset( $input['phone'] ) ? $input['phone'] : '' );
+		$clean['price_range']          = Sanitize::price_range( isset( $input['price_range'] ) ? $input['price_range'] : '' );
+		$clean['logo']                 = Sanitize::http_url( isset( $input['logo'] ) ? $input['logo'] : '' );
+		$clean['images']               = Sanitize::url_list( isset( $input['images'] ) ? $input['images'] : array() );
+		$clean['social_profiles']      = Sanitize::url_list( isset( $input['social_profiles'] ) ? $input['social_profiles'] : array() );
+		$clean['latitude']             = Sanitize::latitude( isset( $input['latitude'] ) ? $input['latitude'] : '' );
+		$clean['longitude']            = Sanitize::longitude( isset( $input['longitude'] ) ? $input['longitude'] : '' );
+		$clean['place_id']             = Sanitize::text( isset( $input['place_id'] ) ? $input['place_id'] : '' );
+		$clean['woocommerce_currency'] = Sanitize::currency( isset( $input['woocommerce_currency'] ) ? $input['woocommerce_currency'] : '' );
 
 		$current = get_option( Plugin::OPTION, array() );
-		if ( is_array( $current ) ) {
-			if ( isset( $current['legacy_aggregate_rating'] ) ) {
-				$clean['legacy_aggregate_rating'] = Sanitize::text( $current['legacy_aggregate_rating'] );
-			}
-			if ( isset( $current['legacy_review_count'] ) ) {
-				$clean['legacy_review_count'] = Sanitize::text( $current['legacy_review_count'] );
-			}
+		if ( ! is_array( $current ) ) {
+			$current = array();
+		}
+
+		/*
+		 * WooCommerce product schema may be omitted from POST when the field is
+		 * not shown. Absent key ≠ unchecked. Explicit 0/1 (hidden+checkbox) is required to change it.
+		 */
+		if ( array_key_exists( 'woocommerce_product_schema', $input ) ) {
+			$clean['woocommerce_product_schema'] = Sanitize::bool( $input['woocommerce_product_schema'] );
+		} elseif ( array_key_exists( 'woocommerce_product_schema', $current ) ) {
+			$clean['woocommerce_product_schema'] = Sanitize::bool( $current['woocommerce_product_schema'] );
+		} else {
+			$clean['woocommerce_product_schema'] = false;
+		}
+
+		if ( isset( $current['legacy_aggregate_rating'] ) ) {
+			$clean['legacy_aggregate_rating'] = Sanitize::text( $current['legacy_aggregate_rating'] );
+		}
+		if ( isset( $current['legacy_review_count'] ) ) {
+			$clean['legacy_review_count'] = Sanitize::text( $current['legacy_review_count'] );
 		}
 
 		if ( isset( $input['legacy_aggregate_rating'] ) ) {

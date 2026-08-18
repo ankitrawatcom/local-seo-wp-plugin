@@ -11,9 +11,14 @@ $GLOBALS['lsar_test_actions']    = array();
 $GLOBALS['lsar_test_filters']    = array();
 
 function lsar_test_reset_state() {
-	$GLOBALS['lsar_test_options']    = array();
-	$GLOBALS['lsar_test_transients'] = array();
-	$GLOBALS['lsar_test_filters']    = array();
+	$GLOBALS['lsar_test_options']       = array();
+	$GLOBALS['lsar_test_transients']    = array();
+	$GLOBALS['lsar_test_filters']       = array();
+	$GLOBALS['lsar_test_is_product']    = false;
+	$GLOBALS['lsar_test_is_front_page'] = false;
+	$GLOBALS['lsar_test_is_home']       = false;
+	$GLOBALS['lsar_test_is_shop']       = false;
+	$GLOBALS['lsar_privacy']            = '';
 }
 
 function add_action( $hook, $callback, $priority = 10, $accepted = 1 ) {
@@ -216,4 +221,20 @@ function wc_get_product( $id ) {
 }
 function get_woocommerce_currency() {
 	return 'EUR';
+}
+function is_front_page() {
+	return ! empty( $GLOBALS['lsar_test_is_front_page'] );
+}
+function is_home() {
+	return ! empty( $GLOBALS['lsar_test_is_home'] );
+}
+function is_shop() {
+	return ! empty( $GLOBALS['lsar_test_is_shop'] );
+}
+function settings_errors( $filter = '' ) {}
+function wp_add_privacy_policy_content( $plugin_name, $policy_text ) {
+	$GLOBALS['lsar_privacy'] = $policy_text;
+}
+function wp_kses_post( $data ) {
+	return $data;
 }

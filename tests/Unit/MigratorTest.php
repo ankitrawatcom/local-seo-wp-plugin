@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use AnkitRawat\LocalSEO\Admin\Settings;
 use AnkitRawat\LocalSEO\Migration\Migrator;
 use AnkitRawat\LocalSEO\Plugin;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +18,7 @@ final class MigratorTest extends TestCase {
 		lsar_test_reset_state();
 	}
 
-	public function test_migrates_legacy_options_without_deleting_them() {
+	public function test_genuine_3_3_install_migrates_settings() {
 		update_option( 'local_seo_enable_schema', '1' );
 		update_option( 'business_type', 'Store' );
 		update_option( 'business_name', 'Legacy Shop' );
@@ -64,7 +65,52 @@ final class MigratorTest extends TestCase {
 		$this->assertSame( '4.0.0', get_option( Plugin::VERSION_KEY ) );
 	}
 
-	public function test_migration_is_idempotent_and_does_not_overwrite() {
+	public function test_unrelated_generic_options_are_not_migrated() {
+		update_option( 'phone', '999-OTHER-PLUGIN' );
+		update_option( 'country', 'FR' );
+		update_option( 'business_name', 'Other Plugin Biz' );
+		update_option( 'business_type', 'Store' );
+		update_option( 'street_address', '1 Collision St' );
+
+		Migrator::maybe_run();
+
+		$new = get_option( Plugin::OPTION );
+		$this->assertIsArray( $new );
+		$this->assertSame( '', $new['phone'] );
+		$this->assertSame( '', $new['country'] );
+		$this->assertSame( '', $new['business_name'] );
+		$this->assertSame( 'LocalBusiness', $new['business_type'] );
+		$this->assertSame( '', $new['street_address'] );
+		$this->assertSame( '999-OTHER-PLUGIN', get_option( 'phone' ) );
+		$this->assertSame( 'Other Plugin Biz', get_option( 'business_name' ) );
+		$this->assertSame( '4.0.0', get_option( Plugin::VERSION_KEY ) );
+	}
+
+	public function test_migration_does_not_overwrite_existing_4_0_settings() {
+		update_option(
+			Plugin::OPTION,
+			array_merge(
+				Settings::defaults(),
+				array(
+					'business_name' => 'Already Four',
+					'phone'         => '111-222-3333',
+				)
+			)
+		);
+		update_option( 'local_seo_enable_schema', '1' );
+		update_option( 'business_name', 'Legacy Should Not Win' );
+		update_option( 'phone', '000-LEGACY' );
+
+		Migrator::maybe_run();
+
+		$new = get_option( Plugin::OPTION );
+		$this->assertSame( 'Already Four', $new['business_name'] );
+		$this->assertSame( '111-222-3333', $new['phone'] );
+		$this->assertSame( 'Legacy Should Not Win', get_option( 'business_name' ) );
+	}
+
+	public function test_migration_is_idempotent() {
+		update_option( 'local_seo_enable_schema', '1' );
 		update_option( 'business_name', 'Old Name' );
 		Migrator::maybe_run();
 
@@ -81,6 +127,7 @@ final class MigratorTest extends TestCase {
 	}
 
 	public function test_invalid_legacy_type_is_normalized() {
+		update_option( 'local_seo_enable_schema', '1' );
 		update_option( 'business_type', 'NotAType' );
 		Migrator::maybe_run();
 		$new = get_option( Plugin::OPTION );
@@ -90,5 +137,11 @@ final class MigratorTest extends TestCase {
 	public function test_api_key_is_in_exclusion_list() {
 		$this->assertContains( 'google_my_business_api_key', Migrator::excluded_legacy_keys() );
 		$this->assertArrayNotHasKey( 'google_my_business_api_key', Migrator::legacy_key_map() );
+	}
+
+	public function test_marker_absence_is_not_evidence() {
+		$this->assertFalse( Migrator::has_legacy_install_evidence() );
+		update_option( 'local_seo_enable_schema', '0' );
+		$this->assertTrue( Migrator::has_legacy_install_evidence() );
 	}
 }

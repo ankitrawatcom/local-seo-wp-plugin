@@ -55,6 +55,17 @@ final class JsonLdSecurityTest extends TestCase {
 		$this->assertFalse( JsonLd::contains_raw_script_close( $json ) );
 	}
 
+	public function test_product_builder_omits_currency_when_empty() {
+		$product = ProductBuilder::from_data(
+			array(
+				'name'  => 'Mug',
+				'price' => '10',
+			)
+		);
+		$this->assertArrayHasKey( 'offers', $product );
+		$this->assertArrayNotHasKey( 'priceCurrency', $product['offers'] );
+	}
+
 	public function test_local_business_omits_placeholders_and_empty_geo() {
 		$builder = new LocalBusiness();
 		$schema  = $builder->build(

@@ -40,7 +40,9 @@ Empty fields are omitted. `@type` is allowlisted. Geo requires both coordinates 
 
 `wp_head` priority 20 prints Product JSON-LD on `is_product()` when enabled.
 
-Store + product schema: `wc_get_products( status=publish, limit=5 )` attached as `hasOfferCatalog`. The limit matches 3.3 and avoids querying the full catalog on every public request.
+Store + product schema: `wc_get_products( status=publish, limit=5 )` is attached as `hasOfferCatalog` with `ListItem` entries. By default the catalog is embedded only on the front page, the posts index (home), or the WooCommerce shop — not on product pages (those already have product JSON-LD) and not on every URL.
+
+Placement is a documented filter, not an error: `local_seo_by_ankit_rawat_embed_store_catalog`. Version 3.3 used an invalid `product` property sitewide; 4.0.0 does not restore that structure.
 
 ## Caching
 
@@ -48,7 +50,18 @@ The 3.3 transient `local_seo_json_ld_schema` is **not** used. NAP data is one `g
 
 ## Migration
 
-`Migrator::maybe_run()` on `admin_init` (priority 1) and on activation. Skips when stored version is `>= 4.0.0`. Does not run on the frontend. Does not delete 3.3 options. Does not copy `google_my_business_api_key`.
+`Migrator::maybe_run()` runs on `admin_init` (priority 1) and on activation. It does not run on the frontend. It skips when `local_seo_by_ankit_rawat_version` is already `>= 4.0.0` (idempotent). It never deletes 3.3 options and never copies `google_my_business_api_key`.
+
+### Detection strategy (conservative)
+
+Version 3.3 did **not** store a plugin version option. The only non-generic option it registered was `local_seo_enable_schema`.
+
+4.0.0 copies generic keys (`phone`, `country`, `business_name`, …) **only if** `get_option( 'local_seo_enable_schema', <missing-sentinel> )` shows that this option exists in the database.
+
+- Presence of `phone` / `country` / `business_name` alone is **not** evidence of Local SEO 3.3.
+- Prefer false negatives: a 3.3 site that never saved this plugin’s settings (marker never written) will not import generic options. Operators can re-enter NAP once.
+- Existing `local_seo_by_ankit_rawat_options` values are not overwritten by legacy keys.
+- After the run, `local_seo_by_ankit_rawat_version` is set to `4.0.0` so later generic options cannot be imported.
 
 ## Uninstall
 
@@ -65,6 +78,7 @@ Deletes `local_seo_by_ankit_rawat_options`, `local_seo_by_ankit_rawat_version`, 
 | `local_seo_by_ankit_rawat_output_local_schema` | filter | `bool` skip sitewide output |
 | `local_seo_by_ankit_rawat_output_product_schema` | filter | `bool` skip product-page output |
 | `local_seo_by_ankit_rawat_store_product_limit` | filter | Catalog size (clamped 1–20) |
+| `local_seo_by_ankit_rawat_embed_store_catalog` | filter | Customize whether Store `hasOfferCatalog` is attached on this request (default: front page, home, shop) |
 
 ## Testing
 

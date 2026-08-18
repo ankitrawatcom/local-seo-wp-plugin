@@ -22,6 +22,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Migrator {
 
 	/**
+	 * 3.3 Settings API option unique to this plugin (prefixed).
+	 *
+	 * Version 3.3 had no version/migration option. This is the only non-generic
+	 * key it registered. Presence is treated as evidence of a Local SEO install,
+	 * not as proof that generic keys like `phone` belong to this plugin alone.
+	 */
+	const LEGACY_MARKER_OPTION = 'local_seo_enable_schema';
+
+	/**
+	 * Default passed to get_option() so a missing marker is distinguishable
+	 * from a stored falsey value.
+	 */
+	const OPTION_MISSING = 'lsar.option.missing.v1';
+
+	/**
 	 * Run once until version is at least 4.0.0.
 	 *
 	 * Invoked from activation and admin_init only, not on the frontend.
@@ -40,10 +55,24 @@ final class Migrator {
 	}
 
 	/**
+	 * Whether 3.3 of this plugin likely saved settings.
+	 *
+	 * Conservative: false negatives are preferred. Sites that never saved
+	 * Local SEO settings (so the marker option was never written) will not
+	 * import generic `phone` / `country` keys.
+	 *
+	 * @return bool
+	 */
+	public static function has_legacy_install_evidence() {
+		$marker = get_option( self::LEGACY_MARKER_OPTION, self::OPTION_MISSING );
+		return self::OPTION_MISSING !== $marker;
+	}
+
+	/**
 	 * Map legacy options into the new array.
 	 *
-	 * Existing new values win. Empty new values are filled from 3.3 when present.
-	 * google_my_business_api_key is intentionally not copied (unused secret).
+	 * Generic keys are copied only when {@see has_legacy_install_evidence()} is true.
+	 * Existing 4.0 values win. google_my_business_api_key is never copied.
 	 *
 	 * @return void
 	 */
@@ -52,54 +81,36 @@ final class Migrator {
 		$current  = is_array( $existing ) ? $existing : array();
 		$merged   = array_merge( Settings::defaults(), $current );
 
-		// When the 4.0 option does not exist yet, copy legacy values over defaults.
 		$replace_defaults = ( false === $existing );
+		$copy_generic     = self::has_legacy_install_evidence();
 
-		$map = array(
-			'local_seo_enable_schema'     => 'schema_enabled',
-			'business_type'               => 'business_type',
-			'business_name'               => 'business_name',
-			'street_address'              => 'street_address',
-			'locality'                    => 'locality',
-			'region'                      => 'region',
-			'postal_code'                 => 'postal_code',
-			'country'                     => 'country',
-			'phone'                       => 'phone',
-			'price_range'                 => 'price_range',
-			'business_logo'               => 'logo',
-			'latitude'                    => 'latitude',
-			'longitude'                   => 'longitude',
-			'google_my_business_place_id' => 'place_id',
-			'woocommerce_product_schema'  => 'woocommerce_product_schema',
-			'woocommerce_price_currency'  => 'woocommerce_currency',
-			'aggregate_rating'            => 'legacy_aggregate_rating',
-			'review_count'                => 'legacy_review_count',
-		);
+		if ( $copy_generic ) {
+			$map = self::legacy_key_map();
+			foreach ( $map as $old_key => $new_key ) {
+				if ( ! $replace_defaults && ! self::is_empty_value( $merged[ $new_key ] ) ) {
+					continue;
+				}
 
-		foreach ( $map as $old_key => $new_key ) {
-			if ( ! $replace_defaults && ! self::is_empty_value( $merged[ $new_key ] ) ) {
-				continue;
+				$old = get_option( $old_key, null );
+				if ( null === $old || false === $old ) {
+					continue;
+				}
+
+				$merged[ $new_key ] = $old;
 			}
 
-			$old = get_option( $old_key, null );
-			if ( null === $old || false === $old ) {
-				continue;
+			if ( $replace_defaults || self::is_empty_value( $merged['images'] ) ) {
+				$legacy_images = get_option( 'business_images', null );
+				if ( null !== $legacy_images && false !== $legacy_images ) {
+					$merged['images'] = $legacy_images;
+				}
 			}
 
-			$merged[ $new_key ] = $old;
-		}
-
-		if ( $replace_defaults || self::is_empty_value( $merged['images'] ) ) {
-			$legacy_images = get_option( 'business_images', null );
-			if ( null !== $legacy_images && false !== $legacy_images ) {
-				$merged['images'] = $legacy_images;
-			}
-		}
-
-		if ( $replace_defaults || self::is_empty_value( $merged['social_profiles'] ) ) {
-			$legacy_social = get_option( 'social_profiles', null );
-			if ( null !== $legacy_social && false !== $legacy_social ) {
-				$merged['social_profiles'] = $legacy_social;
+			if ( $replace_defaults || self::is_empty_value( $merged['social_profiles'] ) ) {
+				$legacy_social = get_option( 'social_profiles', null );
+				if ( null !== $legacy_social && false !== $legacy_social ) {
+					$merged['social_profiles'] = $legacy_social;
+				}
 			}
 		}
 
