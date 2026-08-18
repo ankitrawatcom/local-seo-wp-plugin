@@ -1,0 +1,16 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/admin.php?page=local-seo-settings",
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "7.0.4"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"plugins": [
+		"woocommerce",
+		"plugin-check"
+	]
+}

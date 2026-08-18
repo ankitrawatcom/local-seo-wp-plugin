@@ -1,106 +1,119 @@
 === Local SEO By Ankit Rawat ===
-Contributors: ankitrawat  
-Tags: local seo, schema, seo plugin, local search optimization, google my business, woocommerce  
-Requires at least: 6.0  
-Tested up to: 6.7  
-Requires PHP: 7.4  
-Stable tag: 3.3  
-License: GPLv2 or later  
-License URI: http://www.gnu.org/licenses/gpl-2.0.html  
-Author URI: https://ankitrawat.com  
-Plugin URI: https://ankitrawat.com/local-seo-by-ankit-rawat/  
+Contributors: ankitrawat
+Tags: local seo, schema, json-ld, local business, woocommerce
+Requires at least: 6.0
+Tested up to: 7.0
+Requires PHP: 7.4
+Stable tag: 4.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-**Boost Local Search Rankings** with the ultimate Local SEO plugin. Add schema, integrate Google My Business, and attract more local customers easily.
+Outputs LocalBusiness JSON-LD from a settings screen, with optional WooCommerce product structured data.
 
-== Description ==  
+== Description ==
 
-The **Local SEO By Ankit Rawat** plugin is designed to help businesses increase their visibility in local search results. By generating structured data (JSON-LD schema) and integrating advanced features like Google My Business, reviews, geo coordinates, and WooCommerce support, this plugin ensures search engines understand your business details, making it easier for customers to find you online.  
+Local SEO By Ankit Rawat adds JSON-LD structured data for a single business location. You enter name, address, phone, geo coordinates, logo, images, social profile URLs, and price range. When schema is enabled, those values are printed in the site `head` as `application/ld+json`.
 
-Whether you're a restaurant, hotel, professional service, or an online store, this plugin offers tailored Local SEO features to help you rank higher and grow your business.  
+This plugin does **not** connect to Google Business Profile, import reviews, manage opening hours, or change canonical URLs or robots directives.
 
-### Key Features:  
-- **Advanced Local SEO Schema**: Add structured data like business name, address, phone number, and opening hours to your site.  
-- **Google My Business Integration**: Connect your Google My Business account to sync reviews and location data.  
-- **WooCommerce Support**: Add product-specific schema for online stores to enhance product visibility in search results.  
-- **Customizable Business Types**:  
-   - Restaurants: Add menus, cuisine types, and reservation links.  
-   - Hotels: Define check-in and check-out times, star ratings, and amenities.  
-   - Professional Services: Highlight your service areas and offerings.  
-   - Stores: Add product schema, price range, and currency details.  
-- **Enhanced Search Visibility**:  
-   - Add rich snippets to appear in local search results with key business details.  
-   - Include logos, images, and social media links to boost credibility.  
-- **User-Friendly Interface**: Set up Local SEO in minutes with an easy-to-use admin panel.  
-- **Optimized for Speed**: Lightweight schema generation ensures your site remains fast.  
-- **Geo Coordinates Support**: Add latitude and longitude for precise location targeting.  
-- **Review Management**: Display aggregate ratings and review counts in search results.  
-- **Modular Code Structure**: Improved code organization for better performance and maintainability.  
+= What it does =
 
-### Why Local SEO Matters:  
-1. **Attract Nearby Customers**: Local SEO ensures your business shows up in search results for people near your location.  
-2. **Stand Out in Search Results**: Highlight your business details with rich snippets, increasing click-through rates.  
-3. **Boost Credibility**: Search engines favor businesses with structured data, giving you an edge over competitors.  
-4. **Save Time**: Automate your Local SEO strategy and focus on growing your business.  
+* Settings screen (capability: `manage_options`) for one business profile.
+* Optional sitewide LocalBusiness-family JSON-LD for: LocalBusiness, Restaurant, Hotel, ProfessionalService, Store.
+* Optional WooCommerce Product JSON-LD on product pages (any business type, when WooCommerce is active and the setting is on).
+* When the type is Store and product schema is enabled, up to five published products are listed in a Schema.org `OfferCatalog` (`hasOfferCatalog` with `ListItem` entries) on the **front page**, the **posts index (home)**, and the **WooCommerce shop**. The catalog is not added on every URL.
 
-== Installation ==  
+Developers can change catalog placement with the `local_seo_by_ankit_rawat_embed_store_catalog` filter. Version 3.3 attached an invalid `product` property on essentially every URL; 4.0.0 does not restore that structure.
 
-1. **Automatic Installation**:  
-   - Go to "Plugins" > "Add New" in your WordPress dashboard.  
-   - Search for "Local SEO By Ankit Rawat" and click "Install Now".  
-   - Activate the plugin and configure settings.  
+= What it does not do =
 
-2. **Manual Installation**:  
-   - Upload the plugin to `/wp-content/plugins/`.  
-   - Activate it through the "Plugins" screen in WordPress.  
-   - Go to "Local SEO Settings" to configure your details.  
+* Google Business Profile / Google My Business API synchronization.
+* Review collection, aggregation, or review schema from manually entered ratings.
+* Opening hours, menus, reservations, or hotel amenity schema.
+* Multiple locations.
+* Frontend widgets, shortcodes, or extra CSS/JS on the public site.
 
-== Frequently Asked Questions ==  
+= Developer filters =
 
-= What is Local SEO, and why is it important? =  
-Local SEO focuses on optimizing your website to rank better in local search results. It helps nearby customers find your business, increasing foot traffic and sales.  
+See `docs/ARCHITECTURE.md` for hook names. You can disable output if another SEO plugin already emits equivalent JSON-LD. Catalog placement is controlled with `local_seo_by_ankit_rawat_embed_store_catalog` (default: front page, home, and shop).
 
-= How does this plugin improve Local SEO? =  
-By adding structured data (JSON-LD schema) and integrating Google My Business, this plugin ensures search engines understand your business details, making you more visible in local searches.  
+== Installation ==
 
-= Will it slow down my site? =  
-No. The plugin is optimized for speed and uses caching to minimize resource usage.  
+1. Upload the `local-seo-by-ankit-rawat` folder to `/wp-content/plugins/`.
+2. Activate the plugin through the Plugins screen.
+3. Open **Local SEO By Ankit Rawat** in the admin menu.
+4. Enter business details and enable schema only when the data is accurate.
 
-= How do I test if the schema is working? =  
-Use Google’s Rich Results Test to validate and preview your schema data.  
+== Upgrade Notice ==
 
-= Does this plugin support WooCommerce? =  
-Yes! The plugin now supports WooCommerce stores by adding product-specific schema to enhance product visibility in search results.  
+= 4.0.0 =
+Major release: settings move into a namespaced option. Existing 3.3 values are copied automatically. Old generic options are not deleted. Google Business Profile claims in earlier readmes were never implemented and have been removed from the documentation.
 
-== Changelog ==  
+== Frequently Asked Questions ==
+
+= Will my 3.3 settings be kept? =
+
+Yes. On first admin load or activation after upgrade, values are copied into `local_seo_by_ankit_rawat_options`. The old option keys remain in the database.
+
+= Why is my Google API key missing from the new screen? =
+
+Version 3.3 stored `google_my_business_api_key` but never used it. 4.0.0 does not copy that secret into the new option and does not display it. The old option is left in the database until you delete it yourself.
+
+= How do I test the schema? =
+
+Use [Google’s Rich Results Test](https://search.google.com/test/rich-results) after enabling schema and filling in real NAP data.
+
+= Does this slow the site down? =
+
+There is no frontend CSS or JavaScript. Schema is built from one option (and, for Store catalogs, up to five WooCommerce product queries). Version 3.3’s hour-long transient was removed because it served stale data after settings changes.
+
+= Where does the Store product catalog appear? =
+
+By default only on the front page, the posts index (home), and the WooCommerce shop. Product pages already have Product JSON-LD and do not receive the catalog. To change that, use the `local_seo_by_ankit_rawat_embed_store_catalog` filter.
+
+= Can this duplicate Yoast, Rank Math, or WooCommerce schema? =
+
+Yes. Use the `local_seo_by_ankit_rawat_output_local_schema` and `local_seo_by_ankit_rawat_output_product_schema` filters to turn off this plugin’s output when another plugin already provides it.
+
+== Changelog ==
+
+= 4.0.0 =
+* Namespaced settings option and 3.3 migration (legacy options are not deleted).
+* JSON-LD encoding uses JSON_HEX_TAG to prevent script breakout.
+* No placeholder NAP in public schema.
+* Allowlisted business types.
+* WooCommerce detection no longer uses `woocommerce_params`.
+* Store products emitted as OfferCatalog with ListItem entries (limit 5, published only) on the front page, home, and shop by default.
+* Documentation matches actual features.
+* GPL license file, uninstall handler, tests, and coding-standard configs.
 
 = 3.3 =
-* FIXED: Compatibility issue.
+* Compatibility fix.
 
-= 3.2 =  
-* Added **WooCommerce Support**: Product-specific schema for online stores.  
-* Improved **Modular Code Structure**: Split code into smaller, maintainable files for better performance.  
-* Added **Price Range and Currency Support**: For businesses and WooCommerce stores.  
-* Enhanced **Caching Mechanism**: Improved schema caching for faster performance.  
-* Fixed minor bugs and improved schema validation.  
+= 3.2 =
+* WooCommerce product schema and modular file layout.
 
-= 3.1 =  
-* Improved schema validation and data sanitization.  
-* Enhanced caching to improve performance.  
+= 3.1 =
+* Sanitization and caching tweaks.
 
-= 3.0 =  
-* Added Google My Business integration for reviews and location data.  
-* Introduced geo coordinates (latitude and longitude) for precise location targeting.  
+= 3.0 =
+* Geo fields and unused Google My Business settings fields.
 
-== Upgrade Notice ==  
+== Upgrade From 3.3 ==
 
-= 3.3 =  
-Essential update for all users! Includes critical security patches and major performance improvements.
- 
+1. Back up the database.
+2. Install 4.0.0 over 3.3 (same plugin folder).
+3. Activate or open wp-admin so migration can run.
+4. Confirm settings on the Local SEO screen.
+5. Do not expect Google Business Profile sync; it was never implemented.
 
-== License ==  
+== Troubleshooting ==
 
-This plugin is licensed under the GPLv2 or later. For more details, visit [GPL License](http://www.gnu.org/licenses/gpl-2.0.html).  
+* Schema missing: confirm “Enable schema” is checked and you are viewing the public site, not wp-admin.
+* Product schema missing: WooCommerce must be active, product schema enabled, and you must be on a product page. The setting is shown whenever WooCommerce is active, for any business type.
+* Store catalog missing: business type must be Store, product schema enabled, published products must exist, and you must be on the front page, home, or shop (unless a filter changes placement).
+* Stale 3.3 schema: the old `local_seo_json_ld_schema` transient is deleted during migration.
 
-== Additional Resources ==  
-- [Google Rich Results Test](https://search.google.com/test/rich-results)  
-- [Contact Support](https://ankitrawat.com/local-seo-by-ankit-rawat/)  
+== Screenshots ==
+
+1. Settings screen for business details and schema toggle.
