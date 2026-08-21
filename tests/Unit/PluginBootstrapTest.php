@@ -18,11 +18,11 @@ final class PluginBootstrapTest extends TestCase {
 	}
 
 	public function test_version_constant_matches_plugin_header() {
-		$this->assertSame( '4.0.0', LOCAL_SEO_BY_ANKIT_RAWAT_VERSION );
-		$this->assertSame( '4.0.0', Plugin::VERSION );
+		$this->assertSame( Plugin::VERSION, LOCAL_SEO_BY_ANKIT_RAWAT_VERSION );
 
 		$main = file_get_contents( LOCAL_SEO_BY_ANKIT_RAWAT_FILE );
-		$this->assertMatchesRegularExpression( '/^\s*\*\s*Version:\s*4\.0\.0/m', $main );
+		$pattern = '/^\s*\*\s*Version:\s*' . preg_quote( Plugin::VERSION, '/' ) . '/m';
+		$this->assertMatchesRegularExpression( $pattern, $main );
 		$this->assertMatchesRegularExpression( '/Text Domain:\s*local-seo-by-ankit-rawat/', $main );
 		$this->assertMatchesRegularExpression( '/Requires at least:\s*6\.0/', $main );
 		$this->assertDoesNotMatchRegularExpression( '/Requires WP:/', $main );
@@ -30,7 +30,7 @@ final class PluginBootstrapTest extends TestCase {
 
 	public function test_activation_writes_namespaced_options() {
 		Plugin::activate();
-		$this->assertSame( '4.0.0', get_option( Plugin::VERSION_KEY ) );
+		$this->assertSame( Plugin::VERSION, get_option( Plugin::VERSION_KEY ) );
 		$settings = get_option( Plugin::OPTION );
 		$this->assertIsArray( $settings );
 		$this->assertFalse( $settings['schema_enabled'] );

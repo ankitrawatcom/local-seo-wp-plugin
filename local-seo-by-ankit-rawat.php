@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name:       Local SEO By Ankit Rawat
- * Plugin URI:        https://ankitrawat.com/local-seo-by-ankit-rawat/
+ * Plugin URI:        https://ankitrawat.com/products/local-seo-by-ankit-rawat/
  * Description:       Outputs LocalBusiness JSON-LD and optional WooCommerce product structured data from a settings screen.
- * Version:           4.0.0
+ * Version:           4.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Ankit Rawat
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LOCAL_SEO_BY_ANKIT_RAWAT_VERSION', '4.0.0' );
+define( 'LOCAL_SEO_BY_ANKIT_RAWAT_VERSION', '4.0.1' );
 define( 'LOCAL_SEO_BY_ANKIT_RAWAT_FILE', __FILE__ );
 define( 'LOCAL_SEO_BY_ANKIT_RAWAT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOCAL_SEO_BY_ANKIT_RAWAT_URL', plugin_dir_url( __FILE__ ) );

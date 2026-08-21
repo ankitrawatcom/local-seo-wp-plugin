@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Plugin {
 
-	public const VERSION      = '4.0.0';
+	public const VERSION      = '4.0.1';
 	public const OPTION       = 'local_seo_by_ankit_rawat_options';
 	public const VERSION_KEY  = 'local_seo_by_ankit_rawat_version';
 	public const GROUP        = 'local_seo_by_ankit_rawat_group';

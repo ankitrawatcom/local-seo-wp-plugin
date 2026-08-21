@@ -2,6 +2,14 @@
 
 All notable changes to Local SEO By Ankit Rawat are documented here.
 
+## 4.0.1 — 2026-08-22
+
+Maintenance release.
+
+* Verified WordPress 7.1 compatibility (no code changes required).
+* Updated official product page URL.
+* Cleaned development artifacts from repository.
+
 ## 4.0.0 — 2026-08-17
 
 Major release. Existing 3.3 configuration is migrated into a namespaced option. Generic 3.3 option keys are **not** deleted.
