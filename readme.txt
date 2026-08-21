@@ -82,6 +82,7 @@ Yes. Use the `local_seo_by_ankit_rawat_output_local_schema` and `local_seo_by_an
 
 = 4.0.1 =
 * Verified WordPress 7.1 compatibility (no code changes required; Settings API, Options API, and wp_head output are unaffected by 7.1 changes).
+* Added optional support/donation button on the settings page (voluntary, powered by Razorpay).
 * Updated official product page URL.
 * Cleaned development artifacts from repository.
 
@@ -121,6 +122,15 @@ Yes. Use the `local_seo_by_ankit_rawat_output_local_schema` and `local_seo_by_an
 * Product schema missing: WooCommerce must be active, product schema enabled, and you must be on a product page. The setting is shown whenever WooCommerce is active, for any business type.
 * Store catalog missing: business type must be Store, product schema enabled, published products must exist, and you must be on the front page, home, or shop (unless a filter changes placement).
 * Stale 3.3 schema: the old `local_seo_json_ld_schema` transient is deleted during migration.
+
+== External Services ==
+
+This plugin includes an optional "support the developer" button on its admin settings page. When clicked, it loads a payment form from [Razorpay](https://razorpay.com/), an external payment processor.
+
+* The Razorpay script (`https://checkout.razorpay.com/v1/payment-button.js`) is loaded **only** on the plugin's own settings page, not on the public site.
+* Payment processing is handled entirely by Razorpay. The plugin does not process, store, or transmit payment information.
+* Supporting development is completely voluntary and does not affect plugin functionality.
+* Razorpay's [Terms of Service](https://razorpay.com/terms/) and [Privacy Policy](https://razorpay.com/privacy/) apply to any payment made through the button.
 
 == Screenshots ==
 

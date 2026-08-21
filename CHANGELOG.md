@@ -7,6 +7,7 @@ All notable changes to Local SEO By Ankit Rawat are documented here.
 Maintenance release.
 
 * Verified WordPress 7.1 compatibility (no code changes required).
+* Added optional support/donation button on the settings page (voluntary, powered by Razorpay).
 * Updated official product page URL.
 * Cleaned development artifacts from repository.
 

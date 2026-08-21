@@ -11,12 +11,12 @@ use PHPUnit\Framework\TestCase;
 
 final class DockerComposeConfigTest extends TestCase {
 
-	public function test_compose_file_pins_wordpress_7_0_4_and_mounts_plugin() {
+	public function test_compose_file_pins_wordpress_7_1_and_mounts_plugin() {
 		$path = dirname( LOCAL_SEO_BY_ANKIT_RAWAT_FILE ) . '/tests/Integration/docker-compose.yml';
 		$this->assertFileExists( $path );
 		$yml = file_get_contents( $path );
 		$this->assertIsString( $yml );
-		$this->assertStringContainsString( 'wordpress:7.0.4-php8.3-apache', $yml );
+		$this->assertStringContainsString( 'wordpress:7.1-php8.3-apache', $yml );
 		$this->assertStringContainsString( 'mariadb:11.4', $yml );
 		$this->assertStringContainsString( 'wp-content/plugins/local-seo-by-ankit-rawat', $yml );
 		$this->assertStringContainsString( 'lsar_test_db', $yml );
