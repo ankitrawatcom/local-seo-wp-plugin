@@ -111,6 +111,22 @@ msgid "Google Place ID"
 msgstr ""
 
 #: src/Admin/Settings.php
+msgid "Location"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Where customers can find your business."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Contact & online presence"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "How customers reach and follow you online."
+msgstr ""
+
+#: src/Admin/Settings.php
 msgid "WooCommerce product data"
 msgstr ""
 

@@ -22,6 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Settings {
 
+	/** @var array<string, array> */
+	private $field_config = array();
+
 	/**
 	 * Default option values.
 	 *
@@ -161,6 +164,12 @@ final class Settings {
 	 * @return void
 	 */
 	private function add_field( $id, $label, $type, $section = 'lsar_main', array $extra = array() ) {
+		$this->field_config[ $id ] = array(
+			'label' => $label,
+			'type'  => $type,
+			'extra' => $extra,
+		);
+
 		$args = array_merge(
 			array(
 				'id'        => $id,
@@ -222,7 +231,7 @@ final class Settings {
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( Plugin::GROUP );
-				do_settings_sections( Plugin::PAGE );
+				$this->render_cards();
 				submit_button();
 				?>
 			</form>
@@ -248,6 +257,99 @@ final class Settings {
 			<p class="description"><?php esc_html_e( 'This is completely voluntary and does not affect plugin functionality. Payment is processed securely by Razorpay.', 'local-seo-by-ankit-rawat' ); ?></p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Render the card-based settings layout.
+	 *
+	 * @return void
+	 */
+	private function render_cards() {
+		echo '<div class="lsar-card">';
+		echo '<div class="lsar-card-header">';
+		echo '<h2>' . esc_html__( 'Your business information', 'local-seo-by-ankit-rawat' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Enter your business details below. This information is used to create structured data that search engines like Google use for rich results. Empty fields are simply skipped.', 'local-seo-by-ankit-rawat' ) . '</p>';
+		echo '</div>';
+		echo '<div class="lsar-card-body">';
+		$this->render_card_field( 'schema_enabled' );
+		$this->render_card_field( 'business_type' );
+		$this->render_card_field( 'business_name' );
+		$this->render_card_field( 'price_range' );
+		echo '</div></div>';
+
+		echo '<div class="lsar-card">';
+		echo '<div class="lsar-card-header">';
+		echo '<h2>' . esc_html__( 'Location', 'local-seo-by-ankit-rawat' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Where customers can find your business.', 'local-seo-by-ankit-rawat' ) . '</p>';
+		echo '</div>';
+		echo '<div class="lsar-card-body">';
+		$this->render_card_field( 'street_address' );
+		$this->render_card_field( 'locality' );
+		$this->render_card_field( 'region' );
+		$this->render_card_field( 'postal_code' );
+		$this->render_card_field( 'country' );
+		$this->render_card_field( 'latitude' );
+		$this->render_card_field( 'longitude' );
+		echo '</div></div>';
+
+		echo '<div class="lsar-card">';
+		echo '<div class="lsar-card-header">';
+		echo '<h2>' . esc_html__( 'Contact & online presence', 'local-seo-by-ankit-rawat' ) . '</h2>';
+		echo '<p>' . esc_html__( 'How customers reach and follow you online.', 'local-seo-by-ankit-rawat' ) . '</p>';
+		echo '</div>';
+		echo '<div class="lsar-card-body">';
+		$this->render_card_field( 'phone' );
+		$this->render_card_field( 'logo' );
+		$this->render_card_field( 'images' );
+		$this->render_card_field( 'social_profiles' );
+		$this->render_card_field( 'place_id' );
+		echo '</div></div>';
+
+		echo '<div class="lsar-card">';
+		echo '<div class="lsar-card-header">';
+		echo '<h2>' . esc_html__( 'WooCommerce product data', 'local-seo-by-ankit-rawat' ) . '</h2>';
+		echo '</div>';
+		echo '<div class="lsar-card-body">';
+		if ( ! WooCommerce::is_active() ) {
+			echo '<p>' . esc_html__( 'WooCommerce is not active. Product schema settings are hidden until WooCommerce is installed and activated.', 'local-seo-by-ankit-rawat' ) . '</p>';
+		} else {
+			echo '<p>' . esc_html__( 'When enabled, Product JSON-LD is printed on WooCommerce product pages for any business type.', 'local-seo-by-ankit-rawat' ) . '</p>';
+			echo '<p>' . esc_html__( 'If the business type is Store, up to five published products are also listed in a Schema.org OfferCatalog (hasOfferCatalog with ListItem entries) on the front page, the posts index (home), and the WooCommerce shop. The catalog is not added on every URL. Customize placement with the local_seo_by_ankit_rawat_embed_store_catalog filter.', 'local-seo-by-ankit-rawat' ) . '</p>';
+			$this->render_card_field( 'woocommerce_product_schema' );
+			$this->render_card_field( 'woocommerce_currency' );
+		}
+		echo '</div></div>';
+	}
+
+	/**
+	 * Render one field inside a card.
+	 *
+	 * @param string $id Field id.
+	 * @return void
+	 */
+	private function render_card_field( $id ) {
+		if ( ! isset( $this->field_config[ $id ] ) ) {
+			return;
+		}
+
+		$config    = $this->field_config[ $id ];
+		$label_for = isset( $config['extra']['label_for'] ) ? $config['extra']['label_for'] : 'lsar-' . $id;
+
+		$args = array_merge(
+			array(
+				'id'        => $id,
+				'type'      => $config['type'],
+				'label_for' => $label_for,
+			),
+			$config['extra']
+		);
+
+		echo '<div class="lsar-field">';
+		if ( 'checkbox' !== $config['type'] ) {
+			echo '<label for="' . esc_attr( $label_for ) . '">' . esc_html( $config['label'] ) . '</label>';
+		}
+		$this->render_field( $args );
+		echo '</div>';
 	}
 
 	/**
