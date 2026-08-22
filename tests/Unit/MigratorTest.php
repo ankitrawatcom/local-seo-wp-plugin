@@ -62,7 +62,7 @@ final class MigratorTest extends TestCase {
 
 		$this->assertSame( 'secret-key-do-not-copy', get_option( 'google_my_business_api_key' ) );
 		$this->assertSame( 'Legacy Shop', get_option( 'business_name' ) );
-		$this->assertSame( '4.0.0', get_option( Plugin::VERSION_KEY ) );
+		$this->assertSame( Plugin::VERSION, get_option( Plugin::VERSION_KEY ) );
 	}
 
 	public function test_unrelated_generic_options_are_not_migrated() {
@@ -83,7 +83,7 @@ final class MigratorTest extends TestCase {
 		$this->assertSame( '', $new['street_address'] );
 		$this->assertSame( '999-OTHER-PLUGIN', get_option( 'phone' ) );
 		$this->assertSame( 'Other Plugin Biz', get_option( 'business_name' ) );
-		$this->assertSame( '4.0.0', get_option( Plugin::VERSION_KEY ) );
+		$this->assertSame( Plugin::VERSION, get_option( Plugin::VERSION_KEY ) );
 	}
 
 	public function test_migration_does_not_overwrite_existing_4_0_settings() {

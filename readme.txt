@@ -1,14 +1,16 @@
 === Local SEO By Ankit Rawat ===
 Contributors: ankitrawat
-Tags: local seo, schema, json-ld, local business, woocommerce
+Tags: local seo, schema, local business, woocommerce
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Outputs LocalBusiness JSON-LD from a settings screen, with optional WooCommerce product structured data.
+
+Official website: [Local SEO By Ankit Rawat](https://ankitrawat.com/products/local-seo-by-ankit-rawat/)
 
 == Description ==
 
@@ -46,6 +48,9 @@ See `docs/ARCHITECTURE.md` for hook names. You can disable output if another SEO
 
 == Upgrade Notice ==
 
+= 4.0.1 =
+Maintenance release: verified WordPress 7.1 compatibility, updated official product page URL. No settings or schema changes.
+
 = 4.0.0 =
 Major release: settings move into a namespaced option. Existing 3.3 values are copied automatically. Old generic options are not deleted. Google Business Profile claims in earlier readmes were never implemented and have been removed from the documentation.
 
@@ -76,6 +81,12 @@ By default only on the front page, the posts index (home), and the WooCommerce s
 Yes. Use the `local_seo_by_ankit_rawat_output_local_schema` and `local_seo_by_ankit_rawat_output_product_schema` filters to turn off this plugin’s output when another plugin already provides it.
 
 == Changelog ==
+
+= 4.0.1 =
+* Verified WordPress 7.1 compatibility (no code changes required; Settings API, Options API, and wp_head output are unaffected by 7.1 changes).
+* Added optional support/donation button on the settings page (voluntary, powered by Razorpay).
+* Updated official product page URL.
+* Cleaned development artifacts from repository.
 
 = 4.0.0 =
 * Namespaced settings option and 3.3 migration (legacy options are not deleted).
@@ -113,6 +124,15 @@ Yes. Use the `local_seo_by_ankit_rawat_output_local_schema` and `local_seo_by_an
 * Product schema missing: WooCommerce must be active, product schema enabled, and you must be on a product page. The setting is shown whenever WooCommerce is active, for any business type.
 * Store catalog missing: business type must be Store, product schema enabled, published products must exist, and you must be on the front page, home, or shop (unless a filter changes placement).
 * Stale 3.3 schema: the old `local_seo_json_ld_schema` transient is deleted during migration.
+
+== External Services ==
+
+This plugin includes an optional "support the developer" button on its admin settings page. When clicked, it loads a payment form from [Razorpay](https://razorpay.com/), an external payment processor.
+
+* The Razorpay script (`https://checkout.razorpay.com/v1/payment-button.js`) is loaded **only** on the plugin's own settings page, not on the public site.
+* Payment processing is handled entirely by Razorpay. The plugin does not process, store, or transmit payment information.
+* Supporting development is completely voluntary and does not affect plugin functionality.
+* Razorpay's [Terms of Service](https://razorpay.com/terms/) and [Privacy Policy](https://razorpay.com/privacy/) apply to any payment made through the button.
 
 == Screenshots ==
 

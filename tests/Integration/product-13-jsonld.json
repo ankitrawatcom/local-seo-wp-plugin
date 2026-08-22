@@ -1,0 +1,27 @@
+{
+  "source": "http://127.0.0.1:8088/?product=integration-variable-product",
+  "parent_product_id": 13,
+  "variations": {
+    "14": { "regular_price": "1999", "price": "1999" },
+    "15": { "regular_price": "1499", "price": "1499" }
+  },
+  "woocommerce_parent": {
+    "type": "variable",
+    "price": "1499",
+    "min": "1499.00",
+    "max": "1999.00",
+    "currency": "USD"
+  },
+  "ld_json_blocks": [
+    {
+      "attribution": "Local SEO By Ankit Rawat (LocalBusiness via JsonLd::print_script / LocalBusiness schema)",
+      "json": {"@context":"https://schema.org","@type":"LocalBusiness","url":"http://127.0.0.1:8088/","telephone":"+91 9999999999","address":{"@type":"PostalAddress","streetAddress":"123 Test Street","addressLocality":"Rishikesh","addressRegion":"Uttarakhand","postalCode":"249201","addressCountry":"IN"}}
+    },
+    {
+      "attribution": "Local SEO By Ankit Rawat (Product via WooCommerce::print_product_schema on wp_head:20)",
+      "json": {"@context":"https://schema.org","@type":"Product","name":"Integration Variable Product","url":"http://127.0.0.1:8088/?product=integration-variable-product","offers":{"@type":"Offer","price":"1499","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"http://127.0.0.1:8088/?product=integration-variable-product"}}
+    }
+  ],
+  "woocommerce_core_json_ld": null,
+  "note": "WooCommerce 11.0.1 WC_Structured_Data generates Product data on woocommerce_single_product_summary and prints on wp_footer as https://schema.org/ (trailing slash), often with @graph. That hook did not fire on this block-theme / coming-soon product page, so no WC Product JSON-LD was present."
+}

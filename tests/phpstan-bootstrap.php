@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'LOCAL_SEO_BY_ANKIT_RAWAT_VERSION' ) ) {
-	define( 'LOCAL_SEO_BY_ANKIT_RAWAT_VERSION', '4.0.0' );
+	define( 'LOCAL_SEO_BY_ANKIT_RAWAT_VERSION', '4.0.1' );
 }
 
 if ( ! defined( 'LOCAL_SEO_BY_ANKIT_RAWAT_FILE' ) ) {

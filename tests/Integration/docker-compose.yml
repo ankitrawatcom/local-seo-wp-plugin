@@ -27,8 +27,8 @@ services:
     restart: unless-stopped
 
   wordpress:
-    # Pin 7.0.4 as requested. If this tag is missing on Docker Hub, use wordpress:7.0-php8.3-apache and record the digest.
-    image: wordpress:7.0.4-php8.3-apache
+    # WordPress 7.1 tested 2026-08-22. Update image tag when re-testing.
+    image: wordpress:7.1-php8.3-apache
     ports:
       - "8088:80"
     environment:
