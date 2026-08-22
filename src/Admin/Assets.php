@@ -84,6 +84,7 @@ final class Assets {
 				'woocommerceActive' => self::should_show_woocommerce_fields(),
 				'mediaTitle'        => __( 'Select Business Logo', 'local-seo-by-ankit-rawat' ),
 				'mediaButton'       => __( 'Use this image', 'local-seo-by-ankit-rawat' ),
+				'copied'            => __( 'Copied!', 'local-seo-by-ankit-rawat' ),
 			)
 		);
 	}

@@ -229,6 +229,7 @@ final class Settings {
 			<h1><?php esc_html_e( 'Local SEO Settings', 'local-seo-by-ankit-rawat' ); ?></h1>
 			<?php settings_errors(); ?>
 			<?php $this->render_health_score(); ?>
+			<?php $this->render_schema_preview(); ?>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( Plugin::GROUP );
@@ -316,6 +317,73 @@ final class Settings {
 							<?php endforeach; ?>
 						</ul>
 					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render the Schema Preview card.
+	 *
+	 * @return void
+	 */
+	private function render_schema_preview() {
+		$settings = get_option( Plugin::OPTION, array() );
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
+		$settings = array_merge( self::defaults(), $settings );
+
+		$schema_disabled = empty( $settings['schema_enabled'] );
+		?>
+		<div class="lsar-card lsar-preview-card">
+			<div class="lsar-card-header">
+				<h2><?php esc_html_e( 'Schema Preview', 'local-seo-by-ankit-rawat' ); ?></h2>
+				<p><?php esc_html_e( 'The structured data this plugin outputs on your website.', 'local-seo-by-ankit-rawat' ); ?></p>
+			</div>
+			<div class="lsar-card-body">
+				<?php if ( $schema_disabled ) : ?>
+					<p class="lsar-health-notice">
+						<?php esc_html_e( 'Structured data output is disabled. Enable it above to preview what search engines will see.', 'local-seo-by-ankit-rawat' ); ?>
+					</p>
+				<?php else : ?>
+					<?php
+					$local  = new \AnkitRawat\LocalSEO\Schema\LocalBusiness();
+					$schema = $local->build( $settings, home_url( '/' ) );
+
+					if ( ! empty( $schema ) ) :
+						$json = wp_json_encode( $schema, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+					?>
+					<details>
+						<summary><?php esc_html_e( 'View JSON-LD', 'local-seo-by-ankit-rawat' ); ?></summary>
+						<pre class="lsar-preview-json" id="lsar-schema-json" tabindex="0"><code><?php echo esc_html( $json ); ?></code></pre>
+						<div class="lsar-preview-actions">
+							<button type="button" id="lsar-copy-json" class="button">
+								<?php esc_html_e( 'Copy JSON', 'local-seo-by-ankit-rawat' ); ?>
+							</button>
+							<span id="lsar-copy-feedback" aria-live="polite"></span>
+							<a href="<?php echo esc_url( 'https://search.google.com/test/rich-results?url=' . rawurlencode( home_url( '/' ) ) ); ?>"
+							   target="_blank"
+							   rel="noopener noreferrer"
+							   class="lsar-preview-test-link">
+								<?php esc_html_e( 'Test with Google Rich Results', 'local-seo-by-ankit-rawat' ); ?> &rarr;
+							</a>
+						</div>
+						<p class="description lsar-preview-test-desc">
+							<?php esc_html_e( 'Opens Google\'s Rich Results Test in a new tab. Your site must be publicly accessible for Google to fetch it.', 'local-seo-by-ankit-rawat' ); ?>
+						</p>
+						<?php
+						$type              = isset( $settings['business_type'] ) ? $settings['business_type'] : '';
+						$wc_product_schema = ! empty( $settings['woocommerce_product_schema'] );
+						if ( 'Store' === $type && $wc_product_schema && \AnkitRawat\LocalSEO\Schema\WooCommerce::is_active() ) :
+						?>
+						<p class="description lsar-preview-store-note">
+							<?php esc_html_e( 'Note: The Store product catalog (hasOfferCatalog) appears only on the front page, home, and shop pages — it is not shown in this preview.', 'local-seo-by-ankit-rawat' ); ?>
+						</p>
+						<?php endif; ?>
+					</details>
+					<?php endif; ?>
 				<?php endif; ?>
 			</div>
 		</div>

@@ -406,6 +406,42 @@ msgstr ""
 msgid "Local SEO By Ankit Rawat stores business contact details that you enter in plugin settings (name, address, telephone, geographic coordinates, logo/image URLs, and optional social profile URLs) in the WordPress database. When schema output is enabled, those details may be printed in public JSON-LD on the site. The plugin does not send this information to Google or other remote services."
 msgstr ""
 
+#: src/Admin/Settings.php
+msgid "Schema Preview"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "The structured data this plugin outputs on your website."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Structured data output is disabled. Enable it above to preview what search engines will see."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "View JSON-LD"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Copy JSON"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Test with Google Rich Results"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Opens Google's Rich Results Test in a new tab. Your site must be publicly accessible for Google to fetch it."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Note: The Store product catalog (hasOfferCatalog) appears only on the front page, home, and shop pages — it is not shown in this preview."
+msgstr ""
+
+#: src/Admin/Assets.php
+msgid "Copied!"
+msgstr ""
+
 #: src/Schema/WooCommerce.php
 msgid "Products"
 msgstr ""

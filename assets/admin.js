@@ -60,5 +60,43 @@
 				$logoUrl.val('').trigger('change');
 			});
 		}
+
+		var $copyBtn = $('#lsar-copy-json');
+		if ($copyBtn.length) {
+			$copyBtn.on('click', function () {
+				var jsonEl = document.getElementById('lsar-schema-json');
+				if (!jsonEl) { return; }
+				var text = jsonEl.textContent;
+				var $feedback = $('#lsar-copy-feedback');
+
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(text).then(function () {
+						$feedback.text(lsarAdmin.copied);
+						setTimeout(function () { $feedback.text(''); }, 2000);
+					}, function () {
+						fallbackCopy(text, $feedback);
+					});
+				} else {
+					fallbackCopy(text, $feedback);
+				}
+			});
+		}
+
+		function fallbackCopy(text, $feedback) {
+			var ta = document.createElement('textarea');
+			ta.value = text;
+			ta.style.position = 'fixed';
+			ta.style.opacity = '0';
+			document.body.appendChild(ta);
+			ta.select();
+			try {
+				document.execCommand('copy');
+				$feedback.text(lsarAdmin.copied);
+				setTimeout(function () { $feedback.text(''); }, 2000);
+			} catch (e) {
+				$feedback.text('');
+			}
+			document.body.removeChild(ta);
+		}
 	});
 })(jQuery);
