@@ -4,7 +4,7 @@ Tags: local seo, schema, local business, woocommerce
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,9 @@ See `docs/ARCHITECTURE.md` for hook names. You can disable output if another SEO
 
 == Upgrade Notice ==
 
+= 4.0.2 =
+Fixed support button rendering on hosts with script optimization. No settings or schema changes.
+
 = 4.0.1 =
 Maintenance release: verified WordPress 7.1 compatibility, updated official product page URL. No settings or schema changes.
 
@@ -81,6 +84,10 @@ By default only on the front page, the posts index (home), and the WooCommerce s
 Yes. Use the `local_seo_by_ankit_rawat_output_local_schema` and `local_seo_by_ankit_rawat_output_product_schema` filters to turn off this plugin’s output when another plugin already provides it.
 
 == Changelog ==
+
+= 4.0.2 =
+* Fixed support button not rendering on hosts with JavaScript optimization (LiteSpeed Cache, etc.).
+* Replaced external Razorpay script embed with a simple payment link — no external JavaScript loaded.
 
 = 4.0.1 =
 * Verified WordPress 7.1 compatibility (no code changes required; Settings API, Options API, and wp_head output are unaffected by 7.1 changes).

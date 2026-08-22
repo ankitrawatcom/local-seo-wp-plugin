@@ -2,6 +2,13 @@
 
 All notable changes to Local SEO By Ankit Rawat are documented here.
 
+## 4.0.2 — 2026-08-22
+
+Bug fix release.
+
+* Fixed support button not rendering on hosts with JavaScript optimization (LiteSpeed Cache, etc.).
+* Replaced external Razorpay script embed with a simple payment link — no external JavaScript loaded.
+
 ## 4.0.1 — 2026-08-22
 
 Maintenance release.
