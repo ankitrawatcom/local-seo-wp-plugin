@@ -127,12 +127,13 @@ Yes. Use the `local_seo_by_ankit_rawat_output_local_schema` and `local_seo_by_an
 
 == External Services ==
 
-This plugin includes an optional "support the developer" button on its admin settings page. When clicked, it loads a payment form from [Razorpay](https://razorpay.com/), an external payment processor.
+This plugin includes an optional "support the developer" link on its admin settings page. When clicked, it opens an external payment page hosted by [Razorpay](https://razorpay.com/).
 
-* The Razorpay script (`https://checkout.razorpay.com/v1/payment-button.js`) is loaded **only** on the plugin's own settings page, not on the public site.
+* The link (`https://razorpay.me/@hridyaa`) appears **only** on the plugin's own settings page, not on the public site.
+* **No external scripts are loaded.** The link is a standard HTML anchor; no JavaScript from Razorpay runs on your site.
 * Payment processing is handled entirely by Razorpay. The plugin does not process, store, or transmit payment information.
 * Supporting development is completely voluntary and does not affect plugin functionality.
-* Razorpay's [Terms of Service](https://razorpay.com/terms/) and [Privacy Policy](https://razorpay.com/privacy/) apply to any payment made through the button.
+* Razorpay's [Terms of Service](https://razorpay.com/terms/) and [Privacy Policy](https://razorpay.com/privacy/) apply to any payment made through the link.
 
 == Screenshots ==
 

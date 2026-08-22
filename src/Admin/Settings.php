@@ -242,8 +242,9 @@ final class Settings {
 		<div class="lsar-support-section" style="max-width:520px;margin-top:1.5em;">
 			<h2><?php esc_html_e( 'Liked this plugin?', 'local-seo-by-ankit-rawat' ); ?></h2>
 			<p><?php esc_html_e( 'If Local SEO By Ankit Rawat is helping your website, you can support its continued development.', 'local-seo-by-ankit-rawat' ); ?></p>
-			<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_TSZt6vkvjdbycG"> </script></form>
-			<p style="margin-top:1em;"><small><?php esc_html_e( 'Thank you for supporting the project!', 'local-seo-by-ankit-rawat' ); ?> &#10084;&#65039;</small></p>
+			<p>
+				<a href="https://razorpay.me/@hridyaa" target="_blank" rel="noopener noreferrer" class="button button-secondary"><?php esc_html_e( 'Support this plugin', 'local-seo-by-ankit-rawat' ); ?></a>
+			</p>
 			<p class="description"><?php esc_html_e( 'This is completely voluntary and does not affect plugin functionality. Payment is processed securely by Razorpay.', 'local-seo-by-ankit-rawat' ); ?></p>
 		</div>
 		<?php
