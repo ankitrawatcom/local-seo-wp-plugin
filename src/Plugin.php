@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace AnkitRawat\LocalSEO;
 
+use AnkitRawat\LocalSEO\Admin\ActivationNotice;
 use AnkitRawat\LocalSEO\Admin\Assets;
 use AnkitRawat\LocalSEO\Admin\Settings;
 use AnkitRawat\LocalSEO\Migration\Migrator;
@@ -48,6 +49,9 @@ final class Plugin {
 
 		$assets = new Assets();
 		$assets->register();
+
+		$notice = new ActivationNotice();
+		$notice->register();
 
 		$local = new LocalBusiness();
 		$local->register();
@@ -102,6 +106,8 @@ final class Plugin {
 		if ( false === get_option( self::OPTION, false ) ) {
 			add_option( self::OPTION, Settings::defaults(), '', true );
 		}
+
+		ActivationNotice::on_activation();
 	}
 
 	/**

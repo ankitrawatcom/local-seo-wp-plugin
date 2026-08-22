@@ -478,6 +478,22 @@ msgstr ""
 msgid "Social media links: One or more entries were not valid HTTP or HTTPS URLs and were removed."
 msgstr ""
 
+#: src/Admin/ActivationNotice.php
+msgid "Local SEO By Ankit Rawat is ready."
+msgstr ""
+
+#: src/Admin/ActivationNotice.php
+msgid "Add your business details to help search engines find your business."
+msgstr ""
+
+#: src/Admin/ActivationNotice.php
+msgid "Configure Local SEO"
+msgstr ""
+
+#: src/Admin/ActivationNotice.php
+msgid "Dismiss"
+msgstr ""
+
 #: src/Schema/WooCommerce.php
 msgid "Products"
 msgstr ""

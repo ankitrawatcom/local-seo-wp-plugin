@@ -10,12 +10,18 @@ $GLOBALS['lsar_test_transients']      = array();
 $GLOBALS['lsar_test_actions']         = array();
 $GLOBALS['lsar_test_filters']         = array();
 $GLOBALS['lsar_test_settings_errors'] = array();
+$GLOBALS['lsar_test_user_meta']       = array();
+$GLOBALS['lsar_test_current_user_id'] = 0;
+$GLOBALS['lsar_test_redirect']        = null;
 
 function lsar_test_reset_state() {
 	$GLOBALS['lsar_test_options']         = array();
 	$GLOBALS['lsar_test_transients']      = array();
 	$GLOBALS['lsar_test_filters']         = array();
 	$GLOBALS['lsar_test_settings_errors'] = array();
+	$GLOBALS['lsar_test_user_meta']       = array();
+	$GLOBALS['lsar_test_current_user_id'] = 0;
+	$GLOBALS['lsar_test_redirect']        = null;
 	$GLOBALS['lsar_test_is_product']    = false;
 	$GLOBALS['lsar_test_is_front_page'] = false;
 	$GLOBALS['lsar_test_is_home']       = false;
@@ -247,4 +253,84 @@ function wp_add_privacy_policy_content( $plugin_name, $policy_text ) {
 }
 function wp_kses_post( $data ) {
 	return $data;
+}
+function get_current_user_id() {
+	return $GLOBALS['lsar_test_current_user_id'];
+}
+function get_user_meta( $user_id, $key = '', $single = false ) {
+	if ( isset( $GLOBALS['lsar_test_user_meta'][ $user_id ][ $key ] ) ) {
+		return $single
+			? $GLOBALS['lsar_test_user_meta'][ $user_id ][ $key ]
+			: array( $GLOBALS['lsar_test_user_meta'][ $user_id ][ $key ] );
+	}
+	return $single ? '' : array();
+}
+function update_user_meta( $user_id, $meta_key, $meta_value ) {
+	if ( ! isset( $GLOBALS['lsar_test_user_meta'][ $user_id ] ) ) {
+		$GLOBALS['lsar_test_user_meta'][ $user_id ] = array();
+	}
+	$GLOBALS['lsar_test_user_meta'][ $user_id ][ $meta_key ] = $meta_value;
+	return true;
+}
+function delete_user_meta( $user_id, $meta_key ) {
+	unset( $GLOBALS['lsar_test_user_meta'][ $user_id ][ $meta_key ] );
+	return true;
+}
+function delete_metadata( $type, $id, $key, $value = '', $delete_all = false ) {
+	if ( 'user' === $type && $delete_all ) {
+		foreach ( $GLOBALS['lsar_test_user_meta'] as &$metas ) {
+			unset( $metas[ $key ] );
+		}
+		return true;
+	}
+	if ( 'user' === $type ) {
+		unset( $GLOBALS['lsar_test_user_meta'][ $id ][ $key ] );
+	}
+	return true;
+}
+function admin_url( $path = '' ) {
+	return 'https://example.test/wp-admin/' . ltrim( $path, '/' );
+}
+function wp_nonce_url( $actionurl, $action = -1, $name = '_wpnonce' ) {
+	$sep = ( false !== strpos( $actionurl, '?' ) ) ? '&' : '?';
+	return $actionurl . $sep . $name . '=' . 'test_nonce_' . $action;
+}
+function wp_verify_nonce( $nonce, $action = -1 ) {
+	return ( 'test_nonce_' . $action === $nonce ) ? 1 : false;
+}
+
+class LsarTestRedirectException extends RuntimeException {}
+
+function wp_safe_redirect( $location, $status = 302 ) {
+	$GLOBALS['lsar_test_redirect'] = array( 'location' => $location, 'status' => $status );
+	throw new LsarTestRedirectException( $location );
+}
+function add_query_arg() {
+	$args    = func_get_args();
+	$n       = count( $args );
+	$default = 'https://example.test/wp-admin/';
+	if ( 2 === $n && ! is_array( $args[0] ) ) {
+		$sep = ( false !== strpos( $default, '?' ) ) ? '&' : '?';
+		return $default . $sep . rawurlencode( $args[0] ) . '=' . rawurlencode( $args[1] );
+	}
+	if ( 3 === $n && ! is_array( $args[0] ) ) {
+		$sep = ( false !== strpos( $args[2], '?' ) ) ? '&' : '?';
+		return $args[2] . $sep . rawurlencode( $args[0] ) . '=' . rawurlencode( $args[1] );
+	}
+	if ( $n >= 1 && is_array( $args[0] ) ) {
+		$base = isset( $args[1] ) ? $args[1] : $default;
+		$sep  = ( false !== strpos( $base, '?' ) ) ? '&' : '?';
+		foreach ( $args[0] as $k => $v ) {
+			$base .= $sep . rawurlencode( $k ) . '=' . rawurlencode( $v );
+			$sep   = '&';
+		}
+		return $base;
+	}
+	return $default;
+}
+function remove_query_arg( $keys, $url = '' ) {
+	if ( '' === $url ) {
+		return 'https://example.test/wp-admin/';
+	}
+	return $url;
 }

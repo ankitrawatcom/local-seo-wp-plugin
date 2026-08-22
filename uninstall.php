@@ -21,3 +21,5 @@ delete_transient( 'local_seo_json_ld_schema' );
  * Generic keys such as `phone` and `business_name` are NOT deleted.
  */
 delete_option( 'local_seo_enable_schema' );
+
+delete_metadata( 'user', 0, 'local_seo_by_ankit_rawat_activation_notice_dismissed', '', true );
