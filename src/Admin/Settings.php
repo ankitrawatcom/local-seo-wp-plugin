@@ -228,6 +228,7 @@ final class Settings {
 		<div class="wrap lsar-settings <?php echo esc_attr( $wc_wrap ); ?>">
 			<h1><?php esc_html_e( 'Local SEO Settings', 'local-seo-by-ankit-rawat' ); ?></h1>
 			<?php settings_errors(); ?>
+			<?php $this->render_health_score(); ?>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( Plugin::GROUP );
@@ -255,6 +256,68 @@ final class Settings {
 				<a href="https://razorpay.me/@hridyaa" target="_blank" rel="noopener noreferrer"><img src="<?php echo esc_url( plugin_dir_url( LOCAL_SEO_BY_ANKIT_RAWAT_FILE ) . 'assets/beer-button.png' ); ?>" alt="<?php esc_attr_e( 'Buy me a beer', 'local-seo-by-ankit-rawat' ); ?>" style="max-width:220px;height:auto;" /></a>
 			</p>
 			<p class="description"><?php esc_html_e( 'This is completely voluntary and does not affect plugin functionality. Payment is processed securely by Razorpay.', 'local-seo-by-ankit-rawat' ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render the Schema Health score card.
+	 *
+	 * @return void
+	 */
+	private function render_health_score() {
+		$settings = get_option( Plugin::OPTION, array() );
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
+		$settings = array_merge( self::defaults(), $settings );
+
+		$result = HealthScore::calculate( $settings );
+		$score  = $result['score'];
+		$total  = $result['total'];
+		$status = $result['status'];
+		$checks = $result['checks'];
+		$recs   = $result['recommendations'];
+
+		$schema_disabled = empty( $settings['schema_enabled'] );
+		?>
+		<div class="lsar-card lsar-health-card">
+			<div class="lsar-card-header">
+				<h2><?php esc_html_e( 'Schema Health', 'local-seo-by-ankit-rawat' ); ?></h2>
+				<p><?php esc_html_e( 'How complete is the information you\'ve provided for your structured data.', 'local-seo-by-ankit-rawat' ); ?></p>
+			</div>
+			<div class="lsar-card-body">
+				<div class="lsar-health-summary">
+					<span class="lsar-health-score"><?php echo esc_html( $score . '/' . $total ); ?></span>
+					<span class="lsar-health-status"><?php echo esc_html( $status ); ?></span>
+				</div>
+
+				<?php if ( $schema_disabled ) : ?>
+					<p class="lsar-health-notice">
+						<?php esc_html_e( 'Structured data is currently disabled. Your business information is saved but not visible to search engines.', 'local-seo-by-ankit-rawat' ); ?>
+					</p>
+				<?php endif; ?>
+
+				<ul class="lsar-health-checks">
+					<?php foreach ( $checks as $check ) : ?>
+						<li class="<?php echo $check['passed'] ? 'lsar-check-pass' : 'lsar-check-fail'; ?>">
+							<span class="lsar-check-icon" aria-hidden="true"><?php echo $check['passed'] ? '&#10003;' : '&#10007;'; ?></span>
+							<?php echo esc_html( $check['label'] ); ?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+
+				<?php if ( ! empty( $recs ) ) : ?>
+					<div class="lsar-health-recommendations">
+						<p class="lsar-health-rec-heading"><strong><?php esc_html_e( 'To improve your score:', 'local-seo-by-ankit-rawat' ); ?></strong></p>
+						<ul>
+							<?php foreach ( $recs as $rec ) : ?>
+								<li><?php echo esc_html( $rec ); ?></li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				<?php endif; ?>
+			</div>
 		</div>
 		<?php
 	}

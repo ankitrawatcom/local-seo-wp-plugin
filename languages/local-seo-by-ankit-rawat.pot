@@ -247,6 +247,130 @@ msgid "Store"
 msgstr ""
 
 #: src/Admin/Settings.php
+msgid "Schema Health"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "How complete is the information you've provided for your structured data."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Structured data is currently disabled. Your business information is saved but not visible to search engines."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "To improve your score:"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Structured data enabled"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Enable structured data so search engines can find your business."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Business name added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add your business name."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Street address, city, and country added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add your street address."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add your city or town."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add your country."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Complete your address — add your street, city, and country."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "State/province or postal code added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add your state/province or postal code for a more precise address."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Phone number added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add your phone number."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Business logo added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add a business logo."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Business photos added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add at least one business photo."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Map coordinates added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add both latitude and longitude for your map location."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Social media links added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add at least one social media link."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Price range added"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Add your typical price range."
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Needs setup"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Good start"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Almost there"
+msgstr ""
+
+#: src/Admin/HealthScore.php
+msgid "Complete"
+msgstr ""
+
+#: src/Admin/Settings.php
 msgid "Choose Image"
 msgstr ""
 

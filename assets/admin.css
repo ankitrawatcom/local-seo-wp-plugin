@@ -71,6 +71,91 @@
 	color: #646970;
 }
 
+/* Schema Health card */
+
+.lsar-health-card {
+	border-left: 4px solid #2271b1;
+}
+
+.lsar-health-summary {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.lsar-health-score {
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1;
+	color: #1d2327;
+}
+
+.lsar-health-status {
+	font-size: 14px;
+	font-weight: 600;
+	color: #2271b1;
+}
+
+.lsar-health-notice {
+	background: #fcf9e8;
+	border: 1px solid #dba617;
+	padding: 8px 12px;
+	margin-bottom: 12px;
+	font-size: 13px;
+	color: #6e4e00;
+}
+
+.lsar-health-checks {
+	list-style: none;
+	margin: 0 0 16px;
+	padding: 0;
+}
+
+.lsar-health-checks li {
+	padding: 4px 0;
+	font-size: 13px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.lsar-check-icon {
+	width: 16px;
+	text-align: center;
+	font-weight: 700;
+}
+
+.lsar-check-pass .lsar-check-icon {
+	color: #00a32a;
+}
+
+.lsar-check-fail .lsar-check-icon {
+	color: #d63638;
+}
+
+.lsar-health-recommendations {
+	background: #f6f7f7;
+	border: 1px solid #c3c4c7;
+	padding: 12px 16px;
+	font-size: 13px;
+}
+
+.lsar-health-rec-heading {
+	margin: 0 0 8px;
+}
+
+.lsar-health-recommendations ul {
+	margin: 0;
+	padding-left: 18px;
+}
+
+.lsar-health-recommendations li {
+	margin-bottom: 4px;
+}
+
+/* Logo */
+
 .lsar-logo-preview-wrap {
 	margin-bottom: 8px;
 }
