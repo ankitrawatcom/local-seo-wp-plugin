@@ -10,11 +10,11 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Outputs LocalBusiness JSON-LD from a settings screen, with optional WooCommerce product structured data.
 
-Official website: [Local SEO By Ankit Rawat](https://ankitrawat.com/products/local-seo-by-ankit-rawat/)
-
 == Description ==
 
 Local SEO By Ankit Rawat adds JSON-LD structured data for a single business location. You enter name, address, phone, geo coordinates, logo, images, social profile URLs, and price range. When schema is enabled, those values are printed in the site `head` as `application/ld+json`.
+
+For more information, visit the [official Local SEO By Ankit Rawat website](https://ankitrawat.com/products/local-seo-by-ankit-rawat/).
 
 This plugin does **not** connect to Google Business Profile, import reviews, manage opening hours, or change canonical URLs or robots directives.
 
