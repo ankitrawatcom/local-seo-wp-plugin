@@ -154,6 +154,35 @@
 	margin-bottom: 4px;
 }
 
+/* Conflict notice */
+
+.lsar-conflict-notice {
+	background: #fcf9e8;
+	border: 1px solid #dba617;
+	padding: 12px 16px;
+	margin-top: 16px;
+	font-size: 13px;
+}
+
+.lsar-conflict-heading {
+	margin: 0 0 6px;
+	color: #6e4e00;
+}
+
+.lsar-conflict-list {
+	margin: 0 0 8px;
+	padding-left: 18px;
+}
+
+.lsar-conflict-list li {
+	margin-bottom: 2px;
+}
+
+.lsar-conflict-desc {
+	margin: 0;
+	color: #6e4e00;
+}
+
 /* Schema Preview card */
 
 .lsar-preview-card {

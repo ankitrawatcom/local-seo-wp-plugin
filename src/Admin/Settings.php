@@ -318,7 +318,38 @@ final class Settings {
 						</ul>
 					</div>
 				<?php endif; ?>
+
+				<?php $this->render_conflict_notice(); ?>
 			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render a notice when other SEO plugins are detected.
+	 *
+	 * @return void
+	 */
+	private function render_conflict_notice() {
+		$result = SchemaConflict::detect();
+		if ( ! $result['detected'] ) {
+			return;
+		}
+
+		$plugins = $result['plugins'];
+		?>
+		<div class="lsar-conflict-notice" role="alert">
+			<p class="lsar-conflict-heading">
+				<strong><?php esc_html_e( 'Other SEO plugins detected', 'local-seo-by-ankit-rawat' ); ?></strong>
+			</p>
+			<ul class="lsar-conflict-list">
+				<?php foreach ( $plugins as $plugin ) : ?>
+					<li><?php echo esc_html( $plugin['name'] ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+			<p class="lsar-conflict-desc">
+				<?php esc_html_e( 'Another SEO plugin may also output structured data. Review your schema settings in each plugin to avoid duplicate markup on your site.', 'local-seo-by-ankit-rawat' ); ?>
+			</p>
 		</div>
 		<?php
 	}

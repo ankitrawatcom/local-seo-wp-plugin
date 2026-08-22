@@ -442,6 +442,14 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
+#: src/Admin/Settings.php
+msgid "Other SEO plugins detected"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Another SEO plugin may also output structured data. Review your schema settings in each plugin to avoid duplicate markup on your site."
+msgstr ""
+
 #: src/Schema/WooCommerce.php
 msgid "Products"
 msgstr ""
