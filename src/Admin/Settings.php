@@ -743,6 +743,128 @@ final class Settings {
 			$clean['legacy_review_count'] = Sanitize::text( $input['legacy_review_count'] );
 		}
 
+		self::report_validation( $input, $clean );
+
 		return $clean;
+	}
+
+	/**
+	 * Report validation errors for values the sanitizer rejected.
+	 *
+	 * @param array<string, mixed> $input Raw submitted values.
+	 * @param array<string, mixed> $clean Sanitized values.
+	 * @return void
+	 */
+	private static function report_validation( array $input, array $clean ) {
+		$raw_logo = isset( $input['logo'] ) && is_scalar( $input['logo'] ) ? trim( (string) $input['logo'] ) : '';
+		if ( '' !== $raw_logo && '' === $clean['logo'] ) {
+			add_settings_error(
+				Plugin::OPTION,
+				'invalid_logo',
+				__( 'Business logo: Please enter a valid HTTP or HTTPS URL.', 'local-seo-by-ankit-rawat' ),
+				'error'
+			);
+		}
+
+		$raw_lat = isset( $input['latitude'] ) && is_scalar( $input['latitude'] ) ? trim( (string) $input['latitude'] ) : '';
+		if ( '' !== $raw_lat && '' === $clean['latitude'] ) {
+			add_settings_error(
+				Plugin::OPTION,
+				'invalid_latitude',
+				__( 'Latitude: Please enter a number between -90 and 90.', 'local-seo-by-ankit-rawat' ),
+				'error'
+			);
+		}
+
+		$raw_lng = isset( $input['longitude'] ) && is_scalar( $input['longitude'] ) ? trim( (string) $input['longitude'] ) : '';
+		if ( '' !== $raw_lng && '' === $clean['longitude'] ) {
+			add_settings_error(
+				Plugin::OPTION,
+				'invalid_longitude',
+				__( 'Longitude: Please enter a number between -180 and 180.', 'local-seo-by-ankit-rawat' ),
+				'error'
+			);
+		}
+
+		$raw_cur = isset( $input['woocommerce_currency'] ) && is_scalar( $input['woocommerce_currency'] ) ? trim( (string) $input['woocommerce_currency'] ) : '';
+		if ( '' !== $raw_cur && '' === $clean['woocommerce_currency'] ) {
+			add_settings_error(
+				Plugin::OPTION,
+				'invalid_currency',
+				__( 'Currency override: Please enter a valid three-letter currency code (for example USD).', 'local-seo-by-ankit-rawat' ),
+				'error'
+			);
+		}
+
+		$raw_phone = isset( $input['phone'] ) && is_scalar( $input['phone'] ) ? trim( (string) $input['phone'] ) : '';
+		if ( '' !== $raw_phone && '' === $clean['phone'] ) {
+			add_settings_error(
+				Plugin::OPTION,
+				'invalid_phone',
+				__( 'Phone number: Please enter a valid phone number.', 'local-seo-by-ankit-rawat' ),
+				'error'
+			);
+		}
+
+		self::report_url_list_rejection(
+			isset( $input['images'] ) ? $input['images'] : '',
+			$clean['images'],
+			'invalid_images',
+			__( 'Additional photos: One or more entries were not valid HTTP or HTTPS URLs and were removed.', 'local-seo-by-ankit-rawat' )
+		);
+
+		self::report_url_list_rejection(
+			isset( $input['social_profiles'] ) ? $input['social_profiles'] : '',
+			$clean['social_profiles'],
+			'invalid_social',
+			__( 'Social media links: One or more entries were not valid HTTP or HTTPS URLs and were removed.', 'local-seo-by-ankit-rawat' )
+		);
+	}
+
+	/**
+	 * Report a validation error when a URL list lost entries.
+	 *
+	 * @param mixed        $raw     Raw submitted value.
+	 * @param array<int,string> $clean   Sanitized URL array.
+	 * @param string       $code    Error code slug.
+	 * @param string       $message Translated error message.
+	 * @return void
+	 */
+	private static function report_url_list_rejection( $raw, array $clean, $code, $message ) {
+		$raw_count = self::count_raw_items( $raw );
+		if ( $raw_count > 0 && count( $clean ) < $raw_count ) {
+			add_settings_error( Plugin::OPTION, $code, $message, 'error' );
+		}
+	}
+
+	/**
+	 * Count non-empty items in a raw URL field value.
+	 *
+	 * @param mixed $value Raw value (string or array).
+	 * @return int
+	 */
+	private static function count_raw_items( $value ) {
+		if ( is_array( $value ) ) {
+			$items = $value;
+		} elseif ( is_scalar( $value ) ) {
+			$str = trim( (string) $value );
+			if ( '' === $str ) {
+				return 0;
+			}
+			$items = preg_split( '/\s*,\s*/', $str );
+			if ( ! is_array( $items ) ) {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+
+		$count = 0;
+		foreach ( $items as $item ) {
+			if ( is_scalar( $item ) && '' !== trim( (string) $item ) ) {
+				++$count;
+			}
+		}
+		return $count;
 	}
 }

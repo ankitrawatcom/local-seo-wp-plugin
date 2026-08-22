@@ -450,6 +450,34 @@ msgstr ""
 msgid "Another SEO plugin may also output structured data. Review your schema settings in each plugin to avoid duplicate markup on your site."
 msgstr ""
 
+#: src/Admin/Settings.php
+msgid "Business logo: Please enter a valid HTTP or HTTPS URL."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Latitude: Please enter a number between -90 and 90."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Longitude: Please enter a number between -180 and 180."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Currency override: Please enter a valid three-letter currency code (for example USD)."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Phone number: Please enter a valid phone number."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Additional photos: One or more entries were not valid HTTP or HTTPS URLs and were removed."
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Social media links: One or more entries were not valid HTTP or HTTPS URLs and were removed."
+msgstr ""
+
 #: src/Schema/WooCommerce.php
 msgid "Products"
 msgstr ""

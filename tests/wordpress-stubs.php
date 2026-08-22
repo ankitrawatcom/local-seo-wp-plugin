@@ -5,15 +5,17 @@
  * @package AnkitRawat\LocalSEO
  */
 
-$GLOBALS['lsar_test_options']    = array();
-$GLOBALS['lsar_test_transients'] = array();
-$GLOBALS['lsar_test_actions']    = array();
-$GLOBALS['lsar_test_filters']    = array();
+$GLOBALS['lsar_test_options']         = array();
+$GLOBALS['lsar_test_transients']      = array();
+$GLOBALS['lsar_test_actions']         = array();
+$GLOBALS['lsar_test_filters']         = array();
+$GLOBALS['lsar_test_settings_errors'] = array();
 
 function lsar_test_reset_state() {
-	$GLOBALS['lsar_test_options']       = array();
-	$GLOBALS['lsar_test_transients']    = array();
-	$GLOBALS['lsar_test_filters']       = array();
+	$GLOBALS['lsar_test_options']         = array();
+	$GLOBALS['lsar_test_transients']      = array();
+	$GLOBALS['lsar_test_filters']         = array();
+	$GLOBALS['lsar_test_settings_errors'] = array();
 	$GLOBALS['lsar_test_is_product']    = false;
 	$GLOBALS['lsar_test_is_front_page'] = false;
 	$GLOBALS['lsar_test_is_home']       = false;
@@ -232,6 +234,14 @@ function is_shop() {
 	return ! empty( $GLOBALS['lsar_test_is_shop'] );
 }
 function settings_errors( $filter = '' ) {}
+function add_settings_error( $setting, $code, $message, $type = 'error' ) {
+	$GLOBALS['lsar_test_settings_errors'][] = array(
+		'setting' => $setting,
+		'code'    => $code,
+		'message' => $message,
+		'type'    => $type,
+	);
+}
 function wp_add_privacy_policy_content( $plugin_name, $policy_text ) {
 	$GLOBALS['lsar_privacy'] = $policy_text;
 }
