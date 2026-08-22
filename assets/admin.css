@@ -71,6 +71,36 @@
 	color: #646970;
 }
 
+.lsar-logo-preview-wrap {
+	margin-bottom: 8px;
+}
+
+.lsar-logo-preview-wrap img {
+	max-width: 200px;
+	max-height: 150px;
+	border: 1px solid #c3c4c7;
+	padding: 4px;
+	background: #f0f0f1;
+}
+
+.lsar-logo-actions {
+	margin-top: 8px;
+}
+
+.lsar-logo-actions .button {
+	margin-right: 8px;
+}
+
+.lsar-logo-remove-btn {
+	color: #b32d2e;
+	text-decoration: none;
+}
+
+.lsar-logo-remove-btn:hover,
+.lsar-logo-remove-btn:focus {
+	color: #a00;
+}
+
 /*
  * Hide WooCommerce fields when PHP reports WooCommerce is not active.
  * Rows use Settings API class `lsar-woocommerce-field` on the <tr>.

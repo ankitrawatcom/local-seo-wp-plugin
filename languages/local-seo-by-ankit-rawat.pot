@@ -247,6 +247,22 @@ msgid "Store"
 msgstr ""
 
 #: src/Admin/Settings.php
+msgid "Choose Image"
+msgstr ""
+
+#: src/Admin/Settings.php
+msgid "Remove"
+msgstr ""
+
+#: src/Admin/Assets.php
+msgid "Select Business Logo"
+msgstr ""
+
+#: src/Admin/Assets.php
+msgid "Use this image"
+msgstr ""
+
+#: src/Admin/Settings.php
 msgid "Liked this plugin?"
 msgstr ""
 

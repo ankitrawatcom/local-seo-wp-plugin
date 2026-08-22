@@ -414,6 +414,39 @@ final class Settings {
 			return;
 		}
 
+		if ( 'logo' === $id ) {
+			$url      = is_scalar( $value ) ? (string) $value : '';
+			$has_logo = '' !== $url;
+
+			printf(
+				'<div class="lsar-logo-preview-wrap"%s><img id="lsar-logo-preview" src="%s" alt="" /></div>',
+				$has_logo ? '' : ' style="display:none"',
+				$has_logo ? esc_url( $url ) : ''
+			);
+
+			printf(
+				'<input type="url" id="%1$s" name="%2$s" value="%3$s" class="regular-text" />',
+				esc_attr( 'lsar-' . $id ),
+				esc_attr( $name ),
+				esc_attr( $url )
+			);
+
+			echo '<p class="lsar-logo-actions">';
+			printf(
+				'<button type="button" id="lsar-logo-choose" class="button">%s</button> ',
+				esc_html__( 'Choose Image', 'local-seo-by-ankit-rawat' )
+			);
+			printf(
+				'<button type="button" id="lsar-logo-remove" class="button-link lsar-logo-remove-btn"%s>%s</button>',
+				$has_logo ? '' : ' style="display:none"',
+				esc_html__( 'Remove', 'local-seo-by-ankit-rawat' )
+			);
+			echo '</p>';
+
+			$this->render_description( $id );
+			return;
+		}
+
 		$input_type = 'url' === $type ? 'url' : 'text';
 		printf(
 			'<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" class="regular-text" />',

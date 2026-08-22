@@ -58,6 +58,8 @@ final class Assets {
 			return;
 		}
 
+		wp_enqueue_media();
+
 		$handle = 'local-seo-by-ankit-rawat-admin';
 
 		wp_enqueue_style(
@@ -80,6 +82,8 @@ final class Assets {
 			'lsarAdmin',
 			array(
 				'woocommerceActive' => self::should_show_woocommerce_fields(),
+				'mediaTitle'        => __( 'Select Business Logo', 'local-seo-by-ankit-rawat' ),
+				'mediaButton'       => __( 'Use this image', 'local-seo-by-ankit-rawat' ),
 			)
 		);
 	}
