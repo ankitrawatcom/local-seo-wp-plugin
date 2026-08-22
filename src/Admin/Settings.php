@@ -99,37 +99,37 @@ final class Settings {
 
 		add_settings_section(
 			'lsar_main',
-			__( 'Business details', 'local-seo-by-ankit-rawat' ),
+			__( 'Your business information', 'local-seo-by-ankit-rawat' ),
 			array( $this, 'render_main_section' ),
 			Plugin::PAGE
 		);
 
-		$this->add_field( 'schema_enabled', __( 'Enable schema', 'local-seo-by-ankit-rawat' ), 'checkbox' );
+		$this->add_field( 'schema_enabled', __( 'Show your business in search results', 'local-seo-by-ankit-rawat' ), 'checkbox' );
 		$this->add_field(
 			'business_type',
-			__( 'Business type', 'local-seo-by-ankit-rawat' ),
+			__( 'What type of business are you?', 'local-seo-by-ankit-rawat' ),
 			'business_type',
 			'lsar_main',
 			array( 'label_for' => 'lsar-business-type' )
 		);
 		$this->add_field( 'business_name', __( 'Business name', 'local-seo-by-ankit-rawat' ), 'text' );
 		$this->add_field( 'street_address', __( 'Street address', 'local-seo-by-ankit-rawat' ), 'text' );
-		$this->add_field( 'locality', __( 'City', 'local-seo-by-ankit-rawat' ), 'text' );
-		$this->add_field( 'region', __( 'State/Region', 'local-seo-by-ankit-rawat' ), 'text' );
-		$this->add_field( 'postal_code', __( 'Postal code', 'local-seo-by-ankit-rawat' ), 'text' );
+		$this->add_field( 'locality', __( 'City / Town', 'local-seo-by-ankit-rawat' ), 'text' );
+		$this->add_field( 'region', __( 'State / Province / Region', 'local-seo-by-ankit-rawat' ), 'text' );
+		$this->add_field( 'postal_code', __( 'ZIP / Postal code', 'local-seo-by-ankit-rawat' ), 'text' );
 		$this->add_field( 'country', __( 'Country', 'local-seo-by-ankit-rawat' ), 'text' );
 		$this->add_field( 'phone', __( 'Phone number', 'local-seo-by-ankit-rawat' ), 'text' );
-		$this->add_field( 'price_range', __( 'Price range', 'local-seo-by-ankit-rawat' ), 'text' );
-		$this->add_field( 'logo', __( 'Business logo URL', 'local-seo-by-ankit-rawat' ), 'url' );
-		$this->add_field( 'images', __( 'Additional image URLs', 'local-seo-by-ankit-rawat' ), 'textarea' );
-		$this->add_field( 'social_profiles', __( 'Social profile URLs', 'local-seo-by-ankit-rawat' ), 'textarea' );
+		$this->add_field( 'price_range', __( 'Typical price range', 'local-seo-by-ankit-rawat' ), 'text' );
+		$this->add_field( 'logo', __( 'Business logo', 'local-seo-by-ankit-rawat' ), 'url' );
+		$this->add_field( 'images', __( 'Additional photos', 'local-seo-by-ankit-rawat' ), 'textarea' );
+		$this->add_field( 'social_profiles', __( 'Social media links', 'local-seo-by-ankit-rawat' ), 'textarea' );
 		$this->add_field( 'latitude', __( 'Latitude', 'local-seo-by-ankit-rawat' ), 'text' );
 		$this->add_field( 'longitude', __( 'Longitude', 'local-seo-by-ankit-rawat' ), 'text' );
 		$this->add_field( 'place_id', __( 'Google Place ID', 'local-seo-by-ankit-rawat' ), 'text' );
 
 		add_settings_section(
 			'lsar_woocommerce',
-			__( 'WooCommerce', 'local-seo-by-ankit-rawat' ),
+			__( 'WooCommerce product data', 'local-seo-by-ankit-rawat' ),
 			array( $this, 'render_woocommerce_section' ),
 			Plugin::PAGE
 		);
@@ -186,7 +186,7 @@ final class Settings {
 	 * @return void
 	 */
 	public function render_main_section() {
-		echo '<p>' . esc_html__( 'These details are used only for JSON-LD structured data. Empty fields are omitted. This plugin does not connect to Google Business Profile.', 'local-seo-by-ankit-rawat' ) . '</p>';
+		echo '<p>' . esc_html__( 'Enter your business details below. This information is used to create structured data that search engines like Google use for rich results. Empty fields are simply skipped.', 'local-seo-by-ankit-rawat' ) . '</p>';
 	}
 
 	/**
@@ -277,6 +277,9 @@ final class Settings {
 				checked( ! empty( $value ), true, false ),
 				esc_html( $this->checkbox_label( $id ) )
 			);
+			if ( 'schema_enabled' === $id ) {
+				echo '<p class="description">' . esc_html__( 'When enabled, your business details are added to every page so search engines can show rich results.', 'local-seo-by-ankit-rawat' ) . '</p>';
+			}
 			if ( 'woocommerce_product_schema' === $id ) {
 				echo '<p class="description">' . esc_html__( 'This control is independent of business type. Store OfferCatalog output still requires type Store and only appears on the front page, home, and shop by default.', 'local-seo-by-ankit-rawat' ) . '</p>';
 			}
@@ -305,7 +308,7 @@ final class Settings {
 				esc_attr( $name ),
 				esc_textarea( $text )
 			);
-			echo '<p class="description">' . esc_html__( 'One URL per line, or comma-separated. Only http and https URLs are saved.', 'local-seo-by-ankit-rawat' ) . '</p>';
+			$this->render_description( $id );
 			return;
 		}
 
@@ -329,12 +332,18 @@ final class Settings {
 	 */
 	private function render_description( $id ) {
 		$descriptions = array(
-			'price_range'          => __( 'Example: $$ or $10-$40. Omitted from schema when empty.', 'local-seo-by-ankit-rawat' ),
-			'latitude'             => __( 'Decimal degrees between -90 and 90. GeoCoordinates is output only when both latitude and longitude are valid.', 'local-seo-by-ankit-rawat' ),
-			'longitude'            => __( 'Decimal degrees between -180 and 180.', 'local-seo-by-ankit-rawat' ),
-			'place_id'             => __( 'Optional reference only. Not sent to Google and not included in JSON-LD.', 'local-seo-by-ankit-rawat' ),
+			'business_name'        => __( 'Your official business name, exactly as customers know it.', 'local-seo-by-ankit-rawat' ),
+			'street_address'       => __( 'Your physical business address. Appears in search results and maps.', 'local-seo-by-ankit-rawat' ),
+			'phone'                => __( 'Include country code for international visibility. Example: +91 98765 43210', 'local-seo-by-ankit-rawat' ),
+			'price_range'          => __( 'Use symbols like $, $$, $$$ or a range like $10-$50. Helps customers gauge affordability.', 'local-seo-by-ankit-rawat' ),
+			'logo'                 => __( 'Google displays this in Knowledge Panels. Recommended: square, at least 112x112px.', 'local-seo-by-ankit-rawat' ),
+			'images'               => __( 'Photos of your business, storefront, or products. One URL per line.', 'local-seo-by-ankit-rawat' ),
+			'social_profiles'      => __( 'Links to your Facebook, Instagram, LinkedIn, or YouTube. One per line.', 'local-seo-by-ankit-rawat' ),
+			'latitude'             => __( 'Find your coordinates on Google Maps (right-click, copy coordinates). Decimal format.', 'local-seo-by-ankit-rawat' ),
+			'longitude'            => __( 'Second number from the Google Maps coordinates.', 'local-seo-by-ankit-rawat' ),
+			'place_id'             => __( 'Optional. For your records only — not included in search results.', 'local-seo-by-ankit-rawat' ),
+			'country'              => __( 'Country name as you want it shown (e.g. India, United States, UK).', 'local-seo-by-ankit-rawat' ),
 			'woocommerce_currency' => __( 'Optional ISO 4217 code (for example USD). Leave blank to use the WooCommerce store currency.', 'local-seo-by-ankit-rawat' ),
-			'country'              => __( 'Country name or ISO country code as you want it to appear in PostalAddress.', 'local-seo-by-ankit-rawat' ),
 		);
 
 		if ( isset( $descriptions[ $id ] ) ) {
@@ -353,7 +362,7 @@ final class Settings {
 			return __( 'Output product JSON-LD', 'local-seo-by-ankit-rawat' );
 		}
 
-		return __( 'Output LocalBusiness JSON-LD in the site head', 'local-seo-by-ankit-rawat' );
+		return __( 'Enable structured data in your site\'s HTML', 'local-seo-by-ankit-rawat' );
 	}
 
 	/**
